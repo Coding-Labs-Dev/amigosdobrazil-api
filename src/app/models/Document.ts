@@ -6,7 +6,7 @@ import {
   BuildOptions,
 } from 'sequelize';
 
-export interface IncludeAttributes {
+export interface DocumentAttributes {
   readonly id: number;
   readonly description: string;
   readonly deleted: boolean;
@@ -14,15 +14,15 @@ export interface IncludeAttributes {
   readonly updatedAt: Date;
 }
 
-type IncludeModel = Model & IncludeAttributes;
+type DocumentModel = Model & DocumentAttributes;
 
-type IncludeStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): IncludeModel;
+type DocumentStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): DocumentModel;
 } & {
   _defaults: { [key: string]: { [key: string]: object | string | boolean } };
 };
 
-const IncludeAttributes = {
+const DocumentAttributes = {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -43,7 +43,7 @@ const IncludeAttributes = {
   updatedAt: { type: DataTypes.DATE, allowNull: false },
 };
 
-export default class Include extends Model<IncludeModel, IncludeStatic> {
+export default class Document extends Model<DocumentModel, DocumentStatic> {
   readonly id: number;
 
   readonly description: string;
@@ -56,14 +56,14 @@ export default class Include extends Model<IncludeModel, IncludeStatic> {
 }
 
 export const factory = (sequelize: Sequelize): void =>
-  Include.init(IncludeAttributes, { sequelize, tableName: 'Includes' });
+  Document.init(DocumentAttributes, { sequelize, tableName: 'Documents' });
 
 export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
-  Include.belongsToMany(models.Trip, {
-    through: 'TripInclude',
-    foreignKey: 'includeId',
+  Document.belongsToMany(models.Trip, {
+    through: 'TripDocuments',
+    foreignKey: 'documentId',
     timestamps: false,
     as: 'trips',
   });

@@ -11,3 +11,4 @@ export { default as TripValidator } from './TripValidator';
 export { default as PaymentPlanValidator } from './PaymentPlanValidator';
 export { default as ItineraryValidator } from './ItineraryValidator';
 export { default as IncludeValidator } from './IncludeValidator';
+export { default as DocumentValidator } from './DocumentValidator';

@@ -10,3 +10,4 @@ export { default as Trip } from './Trip';
 export { default as PaymentPlan } from './PaymentPlan';
 export { default as Itinerary } from './Itinerary';
 export { default as Include } from './Include';
+export { default as Document } from './Document';

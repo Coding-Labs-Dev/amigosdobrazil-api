@@ -10,34 +10,49 @@ import {
 } from '@models/File';
 
 import { factory as FormContactFactory } from '@models/FormContact';
+
 import { factory as ClientFactory } from '@models/Client';
+
 import { factory as SettingFactory } from '@models/Setting';
+
 import {
   factory as TestimonialFactory,
   associate as TestimonialAssociate,
 } from '@models/Testimonial';
+
 import {
   factory as HeroFactory,
   associate as HeroAssociate,
 } from '@models/Hero';
+
 import { factory as UserFactory } from '@models/User';
+
 import { factory as WhyUsFactory } from '@models/WhyUs';
+
 import {
   factory as TripFactory,
   associate as TripAssociate,
 } from '@models/Trip';
+
 import {
   factory as PaymentPlanFactory,
   associate as PaymentPlanAssociate,
 } from '@models/PaymentPlan';
+
 import {
   factory as ItineraryFactory,
   associate as ItineraryAssociate,
 } from '@models/Itinerary';
+
 import {
   factory as IncludeFactory,
   associate as IncludeAssociate,
 } from '@models/Include';
+
+import {
+  factory as DocumentFactory,
+  associate as DocumentAssociate,
+} from '@models/Document';
 
 const models = [
   FileFactory,
@@ -52,6 +67,7 @@ const models = [
   PaymentPlanFactory,
   ItineraryFactory,
   IncludeFactory,
+  DocumentFactory,
 ];
 
 const associates = [
@@ -62,6 +78,7 @@ const associates = [
   PaymentPlanAssociate,
   ItineraryAssociate,
   IncludeAssociate,
+  DocumentAssociate,
 ];
 
 class Database {

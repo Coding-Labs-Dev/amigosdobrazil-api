@@ -5,7 +5,7 @@ module.exports = {
     queryInterface: QueryInterface,
     Sequelize: typeof DataTypes,
   ): Promise<void> => {
-    return queryInterface.createTable('TripInclude', {
+    return queryInterface.createTable('TripIncludes', {
       tripId: {
         type: Sequelize.INTEGER,
         references: { model: 'Trips', key: 'id' },
@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: (queryInterface: QueryInterface): Promise<void> => {
-    return queryInterface.dropTable('TripInclude');
+    return queryInterface.dropTable('TripIncludes');
   },
 };

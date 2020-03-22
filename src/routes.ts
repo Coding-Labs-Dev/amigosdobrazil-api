@@ -29,6 +29,7 @@ import {
   PaymentPlanController,
   ItineraryController,
   IncludeController,
+  DocumentController,
 } from '@controllers/index';
 
 /**
@@ -49,6 +50,7 @@ import {
   PaymentPlanValidator,
   ItineraryValidator,
   IncludeValidator,
+  DocumentValidator,
 } from '@validators/index';
 
 function wrapper(
@@ -289,5 +291,20 @@ routes
   .put(wrapper(ItineraryController.update))
   .get(wrapper(ItineraryController.show))
   .delete(wrapper(ItineraryController.delete));
+
+routes.use(
+  '/documents',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(DocumentValidator),
+);
+routes
+  .route('/documents')
+  .get(wrapper(DocumentController.index))
+  .post(wrapper(DocumentController.store));
+routes
+  .route('/documents/:id')
+  .put(wrapper(DocumentController.update))
+  .get(wrapper(DocumentController.show))
+  .delete(wrapper(DocumentController.delete));
 
 export default routes;
