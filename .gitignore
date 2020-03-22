@@ -4,6 +4,8 @@
 .env.development
 .env.test
 .env.local
+.migrations
+
 # Yarn
 node_modules
 yarn-error.log

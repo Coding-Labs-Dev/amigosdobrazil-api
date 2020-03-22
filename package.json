@@ -11,7 +11,9 @@
     "debug": "cross-env SLS_DEBUG=* node --inspect-brk ./node_modules/.bin/serverless offline start -t --env local",
     "coverage": "cross-env NODE_ENV=test jest --coverage -i",
     "migration:create": "./scripts/create_migration.sh",
-    "db:migrate": "cross-env NODE_ENV=test ./scripts/migrate.sh"
+    "model:create": "./scripts/create_model.sh",
+    "controller:create": "./scripts/create_controller.sh",
+    "db:migrate": "./scripts/migrate.sh"
   },
   "devDependencies": {
     "@serverless/eslint-config": "^1.2.1",

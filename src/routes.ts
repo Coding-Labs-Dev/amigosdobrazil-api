@@ -11,7 +11,17 @@ import ValidatorMiddleware from '@middlewares/ValidatorMiddleware';
  * Controllers
  */
 
-import UploadFileController from '@controllers/UploadFileController';
+import {
+  ClientController,
+  FormContactController,
+  FileController,
+  SettingController,
+  TestimonialController,
+  UploadFileController,
+  UserController,
+  WhyUsController,
+  HeroController,
+} from '@controllers/index';
 
 /**
  * Validators
@@ -30,13 +40,91 @@ function wrapper(
 
 const routes = Router();
 
-routes.get('/', (_req, res) => res.json({ response: 'Hello World' }));
-
 routes.post(
   '/upload/:type',
   ValidatorMiddleware(UploadValidator),
   UploadFileMiddleware.single('file'),
   wrapper(UploadFileController.store),
 );
+
+routes
+  .route('/files')
+  .get(wrapper(FileController.index))
+  .post(wrapper(FileController.store));
+routes
+  .route('/files/:id')
+  .get(wrapper(FileController.show))
+  .put(wrapper(FileController.update))
+  .delete(wrapper(FileController.delete));
+
+routes
+  .route('/clients')
+  .get(wrapper(ClientController.index))
+  .post(wrapper(ClientController.store));
+routes
+  .route('/clients/:id')
+  .get(wrapper(ClientController.show))
+  .put(wrapper(ClientController.update))
+  .delete(wrapper(ClientController.delete));
+
+routes
+  .route('/formcontacts')
+  .get(wrapper(FormContactController.index))
+  .post(wrapper(FormContactController.store));
+routes
+  .route('/formcontacts/:id')
+  .get(wrapper(FormContactController.show))
+  .put(wrapper(FormContactController.update))
+  .delete(wrapper(FormContactController.delete));
+
+routes
+  .route('/settings')
+  .get(wrapper(SettingController.index))
+  .post(wrapper(SettingController.store));
+routes
+  .route('/settings/:id')
+  .get(wrapper(SettingController.show))
+  .put(wrapper(SettingController.update))
+  .delete(wrapper(SettingController.delete));
+
+routes
+  .route('/testimonials')
+  .get(wrapper(TestimonialController.index))
+  .post(wrapper(TestimonialController.store));
+routes
+  .route('/testimonials/:id')
+  .get(wrapper(TestimonialController.show))
+  .put(wrapper(TestimonialController.update))
+  .delete(wrapper(TestimonialController.delete));
+
+routes
+  .route('/user')
+  .get(wrapper(UserController.index))
+  .post(wrapper(UserController.store));
+routes
+  .route('/user/:id')
+  .get(wrapper(UserController.show))
+  .put(wrapper(UserController.update))
+  .delete(wrapper(UserController.delete));
+
+routes
+  .route('/whyus')
+  .get(wrapper(WhyUsController.index))
+  .post(wrapper(WhyUsController.store));
+routes
+  .route('/whyus/:id')
+  .get(wrapper(WhyUsController.show))
+  .put(wrapper(WhyUsController.update))
+  .delete(wrapper(WhyUsController.delete));
+
+routes
+  .route('/heroes')
+  .get(wrapper(HeroController.index))
+  .post(wrapper(HeroController.store));
+routes
+  .route('/heroes/:id')
+  .get(wrapper(HeroController.show))
+  .put(wrapper(HeroController.update))
+  .delete(wrapper(HeroController.delete));
 
 export default routes;

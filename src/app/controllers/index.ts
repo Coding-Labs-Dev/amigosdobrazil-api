@@ -1,0 +1,9 @@
+export { default as ClientController } from './ClientController';
+export { default as FormContactController } from './FormContactController';
+export { default as FileController } from './FileController';
+export { default as SettingController } from './SettingController';
+export { default as TestimonialController } from './TestimonialController';
+export { default as UploadFileController } from './UploadFileController';
+export { default as UserController } from './UserController';
+export { default as WhyUsController } from './WhyUsController';
+export { default as HeroController } from './HeroController';

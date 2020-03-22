@@ -18,7 +18,7 @@ echo ""
 
 echo ""
 echo " -> Step 2/3: Copying resources required for migration."
-cp -rf ./src/database/dump ./build-migrations/database/
+cp -rf ./src/database/dump ./migrations/database/
 echo " -> Copying resources completed."
 echo ""
 

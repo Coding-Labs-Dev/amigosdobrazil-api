@@ -2,16 +2,39 @@ import { Sequelize } from 'sequelize';
 
 import databaseConfig from '@config/database';
 
-// import * as Models from '@models/index';
+import * as Models from '@models/index';
 
 import {
-  factory as ContactFactory,
-  // associate as ContactAssociate,
-} from '@models/Contact';
+  factory as FileFactory,
+  associate as FileAssociate,
+} from '@models/File';
 
-const models = [ContactFactory];
+import { factory as FormContactFactory } from '@models/FormContact';
+import { factory as ClientFactory } from '@models/Client';
+import { factory as SettingFactory } from '@models/Setting';
+import {
+  factory as TestimonialFactory,
+  associate as TestimonialAssociate,
+} from '@models/Testimonial';
+import {
+  factory as HeroFactory,
+  associate as HeroAssociate,
+} from '@models/Hero';
+import { factory as UserFactory } from '@models/User';
+import { factory as WhyUsFactory } from '@models/WhyUs';
 
-// const associates = [ContactAssociate];
+const models = [
+  FileFactory,
+  FormContactFactory,
+  ClientFactory,
+  SettingFactory,
+  TestimonialFactory,
+  UserFactory,
+  WhyUsFactory,
+  HeroFactory,
+];
+
+const associates = [FileAssociate, TestimonialAssociate, HeroAssociate];
 
 class Database {
   public connection: Sequelize;
@@ -24,7 +47,7 @@ class Database {
     this.connection = new Sequelize(databaseConfig);
 
     models.forEach(model => model(this.connection));
-    // associates.forEach(associate => associate(Models));
+    associates.forEach(associate => associate(Models));
   }
 }
 

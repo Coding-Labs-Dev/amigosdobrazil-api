@@ -1,4 +1,3 @@
-cat > ./src/database/migrations/$(date +"%Y%m%d%H%M%S")-$1.ts << EOF
 import { QueryInterface, DataTypes } from 'sequelize';
 
 module.exports = {
@@ -6,12 +5,35 @@ module.exports = {
     queryInterface: QueryInterface,
     Sequelize: typeof DataTypes,
   ): Promise<void> => {
-    return queryInterface.createTable('$1', {
+    return queryInterface.createTable('Files', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
+      file: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      originalName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      subType: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       deleted: {
         type: Sequelize.BOOLEAN,
@@ -24,7 +46,6 @@ module.exports = {
   },
 
   down: (queryInterface: QueryInterface): Promise<void> => {
-    return queryInterface.dropTable('$1');
+    return queryInterface.dropTable('Files');
   },
 };
-EOF
