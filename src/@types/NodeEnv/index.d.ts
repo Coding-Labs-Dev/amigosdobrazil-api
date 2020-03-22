@@ -1,6 +1,7 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV: 'production' | 'development' | 'test';
+    API_KEY: string;
     DB_DIALECT:
       | 'mysql'
       | 'postgres'

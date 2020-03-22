@@ -6,11 +6,14 @@ import {
   BuildOptions,
 } from 'sequelize';
 
+import bcrypt from 'bcryptjs';
+
 export interface UserAttributes {
   readonly id: number;
   readonly name: string;
   readonly email: string;
   readonly password: string;
+  readonly passwordHash: string;
   readonly deleted: boolean;
   readonly createdAt: boolean;
   readonly upatedAt: boolean;
@@ -41,6 +44,9 @@ const UserAttributes = {
     unique: true,
   },
   password: {
+    type: DataTypes.VIRTUAL,
+  },
+  passwordHash: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -62,12 +68,29 @@ export default class User extends Model<UserModel, UserStatic> {
 
   readonly password: string;
 
+  public passwordHash: string;
+
   readonly deleted: boolean;
 
   readonly createdAt: boolean;
 
   readonly upatedAt: boolean;
+
+  async checkPassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.passwordHash);
+  }
 }
 
-export const factory = (sequelize: Sequelize): void =>
-  User.init(UserAttributes, { sequelize, tableName: 'Users' });
+export const factory = (sequelize: Sequelize): void => {
+  User.init(UserAttributes, {
+    sequelize,
+    tableName: 'Users',
+  });
+
+  User.beforeValidate((user: User): void => {
+    if (user.password) {
+      // eslint-disable-next-line no-param-reassign
+      user.passwordHash = bcrypt.hashSync(user.password, 8);
+    }
+  });
+};

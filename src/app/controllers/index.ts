@@ -1,3 +1,4 @@
+export { default as SessionController } from './SessionController';
 export { default as ClientController } from './ClientController';
 export { default as FormContactController } from './FormContactController';
 export { default as FileController } from './FileController';

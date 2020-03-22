@@ -14,7 +14,9 @@ class UserController {
   async store(req: Request, res: Response): Promise<Response> {
     const { body } = req;
 
-    const user = await User.create(body);
+    // const user = await User.create(body);
+    const user = User.build(body);
+    await user.save();
 
     return res.json(user);
   }
@@ -32,12 +34,21 @@ class UserController {
 
   async update(req: Request, res: Response): Promise<Response> {
     const { body } = req;
-    const { id } = req.params;
-    const user = await User.findOne({
-      where: { id, deleted: false },
-    });
+    // const { id } = req.params;
+
+    const user = await User.findByPk(req.auth?.userId);
 
     if (!user) return res.status(404).send();
+
+    if (
+      (body.password && !body.oldPassword) ||
+      (body.oldPassword && !(await user.checkPassword(body.oldPassword)))
+    )
+      return process.env.NODE_ENV !== 'production'
+        ? res.status(401).json({
+            error: { message: 'Password mismatch' },
+          })
+        : res.status(401).send();
 
     await user.update(body);
 

@@ -6,6 +6,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import UploadFileMiddleware from '@middlewares/UploadFileMiddleware';
 import ValidatorMiddleware from '@middlewares/ValidatorMiddleware';
+import AuthenticationMiddleware from '@middlewares/AuthenticationMiddleware';
 
 /**
  * Controllers
@@ -21,12 +22,14 @@ import {
   UserController,
   WhyUsController,
   HeroController,
+  SessionController,
 } from '@controllers/index';
 
 /**
  * Validators
  */
 
+import UserValidator from '@validators/UserValidator';
 import UploadValidator from '@validators/UploadValidator';
 
 function wrapper(
@@ -56,6 +59,11 @@ routes
   .get(wrapper(FileController.show))
   .put(wrapper(FileController.update))
   .delete(wrapper(FileController.delete));
+
+routes
+  .route('/sessions')
+  // .get(wrapper(FileController.index))
+  .post(wrapper(SessionController.store));
 
 routes
   .route('/clients')
@@ -98,14 +106,22 @@ routes
   .delete(wrapper(TestimonialController.delete));
 
 routes
-  .route('/user')
-  .get(wrapper(UserController.index))
-  .post(wrapper(UserController.store));
+  .route('/users')
+  .get(AuthenticationMiddleware, wrapper(UserController.index))
+  .put(AuthenticationMiddleware, wrapper(UserController.update))
+  .post(
+    ValidatorMiddleware(UserValidator.store),
+    wrapper(UserController.store),
+  );
 routes
-  .route('/user/:id')
-  .get(wrapper(UserController.show))
-  .put(wrapper(UserController.update))
-  .delete(wrapper(UserController.delete));
+  .route('/users/:id')
+  .get(AuthenticationMiddleware, wrapper(UserController.show))
+  .put(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(UserValidator.update),
+    wrapper(UserController.update),
+  )
+  .delete(AuthenticationMiddleware, wrapper(UserController.delete));
 
 routes
   .route('/whyus')

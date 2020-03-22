@@ -40,6 +40,12 @@ const FileAttributes = {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   },
+  url: {
+    type: DataTypes.VIRTUAL,
+    get(this: FileModel): string {
+      return `${process.env.API_URL}/files/${this.file}`;
+    },
+  },
   file: {
     type: DataTypes.STRING,
     allowNull: false,
