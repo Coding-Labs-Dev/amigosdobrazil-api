@@ -15,8 +15,8 @@ export interface FileAttributes {
   readonly subType: string;
 
   readonly deleted: boolean;
-  readonly createdAt: boolean;
-  readonly upatedAt: boolean;
+  readonly createdAt: Date;
+  readonly upatedAt: Date;
 }
 
 type FileModel = Model & FileAttributes;
@@ -87,9 +87,9 @@ export default class File extends Model<FileModel, FileStatic> {
 
   readonly deleted: boolean;
 
-  readonly createdAt: boolean;
+  readonly createdAt: Date;
 
-  readonly upatedAt: boolean;
+  readonly upatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

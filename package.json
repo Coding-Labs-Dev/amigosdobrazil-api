@@ -9,11 +9,12 @@
     "test": "cross-env NODE_ENV=test jest --watch --i",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --watch",
     "debug": "cross-env SLS_DEBUG=* node --inspect-brk ./node_modules/.bin/serverless offline start -t --env local",
-    "coverage": "cross-env NODE_ENV=test jest --coverage -i",
-    "migration:create": "./scripts/create_migration.sh",
-    "model:create": "./scripts/create_model.sh",
-    "controller:create": "./scripts/create_controller.sh",
-    "db:migrate": "./scripts/migrate.sh"
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage -i",
+    "make:migration": "./scripts/create_migration.sh",
+    "make:model": "./scripts/create_model.sh",
+    "make:controller": "./scripts/create_controller.sh",
+    "make:validator": "./scripts/create_validator.sh",
+    "migrations:run": "./scripts/migrate.sh"
   },
   "devDependencies": {
     "@serverless/eslint-config": "^1.2.1",

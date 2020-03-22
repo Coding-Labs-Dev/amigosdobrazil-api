@@ -12,8 +12,8 @@ export interface TestimonialAttributes {
   readonly videoId: number;
   readonly posterId: number;
   readonly deleted: boolean;
-  readonly createdAt: boolean;
-  readonly upatedAt: boolean;
+  readonly createdAt: Date;
+  readonly upatedAt: Date;
 }
 
 type TestimonialModel = Model & TestimonialAttributes;
@@ -72,9 +72,9 @@ export default class Testimonial extends Model<
 
   readonly deleted: boolean;
 
-  readonly createdAt: boolean;
+  readonly createdAt: Date;
 
-  readonly upatedAt: boolean;
+  readonly upatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

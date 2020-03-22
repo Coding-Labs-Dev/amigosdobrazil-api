@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const schema = {
+export default {
   store: {
     body: yup.object().shape({
       name: yup.string().required(),
@@ -19,6 +19,9 @@ const schema = {
     }),
   },
   update: {
+    params: yup.object().shape({
+      id: yup.string().required(),
+    }),
     body: yup.object().shape({
       name: yup.string(),
       email: yup.string().email(),
@@ -26,17 +29,15 @@ const schema = {
       password: yup
         .string()
         .min(6)
-        .when('oldPassword', (oldPassword, field) =>
+        .when('oldPassword', (oldPassword: string, field: yup.StringSchema) =>
           oldPassword ? field.required() : field,
         ),
       passwordConfirmation: yup
         .string()
         .min(6)
-        .when('password', (password, field) =>
+        .when('password', (password: string, field: yup.StringSchema) =>
           password ? field.required().oneOf([yup.ref('password')]) : field,
         ),
     }),
   },
 };
-
-export default schema;

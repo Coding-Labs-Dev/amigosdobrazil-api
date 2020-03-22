@@ -11,8 +11,8 @@ export interface WhyUsAttributes {
   readonly title: string;
   readonly text: string;
   readonly deleted: boolean;
-  readonly createdAt: boolean;
-  readonly upatedAt: boolean;
+  readonly createdAt: Date;
+  readonly upatedAt: Date;
 }
 
 type WhyUsModel = Model & WhyUsAttributes;
@@ -56,9 +56,9 @@ export default class WhyUs extends Model<WhyUsModel, WhyUsStatic> {
 
   readonly deleted: boolean;
 
-  readonly createdAt: boolean;
+  readonly createdAt: Date;
 
-  readonly upatedAt: boolean;
+  readonly upatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

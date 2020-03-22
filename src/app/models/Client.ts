@@ -10,9 +10,18 @@ export interface ClientAttributes {
   readonly id: number;
   readonly name: string;
   readonly email: string;
+  readonly socialMedia: object;
+  readonly mainPhone: string;
+  readonly altPhone?: string;
+  readonly street: string;
+  readonly neigh: string;
+  readonly city: string;
+  readonly state: string;
+  readonly zip: string;
+  readonly notes?: string;
   readonly deleted: boolean;
-  readonly createdAt: boolean;
-  readonly upatedAt: boolean;
+  readonly createdAt: Date;
+  readonly upatedAt: Date;
 }
 
 type ClientModel = Model & ClientAttributes;
@@ -39,6 +48,43 @@ const ClientAttributes = {
     allowNull: false,
     unique: true,
   },
+  socialMedia: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: {},
+  },
+  mainPhone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  altPhone: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  street: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  neigh: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  state: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  zip: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  notes: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -55,11 +101,29 @@ export default class Client extends Model<ClientModel, ClientStatic> {
 
   readonly email: string;
 
+  readonly socialMedia: object;
+
+  readonly mainPhone: string;
+
+  readonly altPhone?: string;
+
+  readonly street: string;
+
+  readonly neigh: string;
+
+  readonly city: string;
+
+  readonly state: string;
+
+  readonly zip: string;
+
+  readonly notes?: string;
+
   readonly deleted: boolean;
 
-  readonly createdAt: boolean;
+  readonly createdAt: Date;
 
-  readonly upatedAt: boolean;
+  readonly upatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

@@ -1,9 +1,7 @@
 import * as yup from 'yup';
 
-const schema = {
+export default {
   params: yup.object().shape({
     type: yup.string().required(),
   }),
 };
-
-export default schema;

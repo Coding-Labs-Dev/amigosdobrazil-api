@@ -14,8 +14,8 @@ export interface FormContactAttributes {
   readonly message: string;
   readonly readed: boolean;
   readonly deleted: boolean;
-  readonly createdAt: boolean;
-  readonly upatedAt: boolean;
+  readonly createdAt: Date;
+  readonly upatedAt: Date;
 }
 
 type FormContactModel = Model & FormContactAttributes;
@@ -81,9 +81,9 @@ export default class FormContact extends Model<
 
   readonly deleted: boolean;
 
-  readonly createdAt: boolean;
+  readonly createdAt: Date;
 
-  readonly upatedAt: boolean;
+  readonly upatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

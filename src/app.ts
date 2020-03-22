@@ -10,7 +10,6 @@ class App {
 
   constructor() {
     this.server = express();
-
     this.middlewares();
     this.routes();
     this.globalEHandler();
@@ -18,6 +17,12 @@ class App {
 
   middlewares(): void {
     this.server.use(express.json());
+    if (process.env.NODE_ENV !== 'production')
+      this.server.use((req, _res, next) => {
+        const { method, url, params, body } = req;
+        console.dir({ method, url, params, body }, { depth: 3 });
+        next();
+      });
   }
 
   routes(): void {

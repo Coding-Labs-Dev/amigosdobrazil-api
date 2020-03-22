@@ -4,9 +4,11 @@ import { Router, Request, Response, NextFunction } from 'express';
  * Middlewares
  */
 
-import UploadFileMiddleware from '@middlewares/UploadFileMiddleware';
-import ValidatorMiddleware from '@middlewares/ValidatorMiddleware';
-import AuthenticationMiddleware from '@middlewares/AuthenticationMiddleware';
+import {
+  UploadFileMiddleware,
+  ValidatorMiddleware,
+  AuthenticationMiddleware,
+} from '@middlewares/index';
 
 /**
  * Controllers
@@ -29,8 +31,17 @@ import {
  * Validators
  */
 
-import UserValidator from '@validators/UserValidator';
-import UploadValidator from '@validators/UploadValidator';
+import {
+  ClientValidator,
+  FormContactValidator,
+  HeroValidator,
+  SettingValidator,
+  TestimonialValidator,
+  WhyUsValidator,
+  UserValidator,
+  UploadValidator,
+  SessionValidator,
+} from '@validators/index';
 
 function wrapper(
   fn: Function,
@@ -62,13 +73,21 @@ routes
 
 routes
   .route('/sessions')
-  // .get(wrapper(FileController.index))
-  .post(wrapper(SessionController.store));
+  .post(
+    ValidatorMiddleware(SessionValidator),
+    wrapper(SessionController.store),
+  );
 
 routes
   .route('/clients')
-  .get(wrapper(ClientController.index))
-  .post(wrapper(ClientController.store));
+  .get(AuthenticationMiddleware, wrapper(ClientController.index))
+  .post(ValidatorMiddleware(ClientValidator), wrapper(ClientController.store));
+
+routes.use(
+  '/clients/:id',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(ClientValidator),
+);
 routes
   .route('/clients/:id')
   .get(wrapper(ClientController.show))
@@ -77,8 +96,16 @@ routes
 
 routes
   .route('/formcontacts')
-  .get(wrapper(FormContactController.index))
-  .post(wrapper(FormContactController.store));
+  .get(AuthenticationMiddleware, wrapper(FormContactController.index))
+  .post(
+    ValidatorMiddleware(FormContactValidator),
+    wrapper(FormContactController.store),
+  );
+routes.use(
+  '/formcontacts/:id',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(FormContactValidator),
+);
 routes
   .route('/formcontacts/:id')
   .get(wrapper(FormContactController.show))
@@ -88,7 +115,17 @@ routes
 routes
   .route('/settings')
   .get(wrapper(SettingController.index))
-  .post(wrapper(SettingController.store));
+  .post(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(SettingValidator),
+    wrapper(SettingController.store),
+  );
+
+routes.use(
+  '/settings/:id',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(SettingValidator),
+);
 routes
   .route('/settings/:id')
   .get(wrapper(SettingController.show))
@@ -98,7 +135,16 @@ routes
 routes
   .route('/testimonials')
   .get(wrapper(TestimonialController.index))
-  .post(wrapper(TestimonialController.store));
+  .post(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(TestimonialValidator),
+    wrapper(TestimonialController.store),
+  );
+routes.use(
+  '/testimonials',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(TestimonialValidator),
+);
 routes
   .route('/testimonials/:id')
   .get(wrapper(TestimonialController.show))
@@ -108,17 +154,23 @@ routes
 routes
   .route('/users')
   .get(AuthenticationMiddleware, wrapper(UserController.index))
-  .put(AuthenticationMiddleware, wrapper(UserController.update))
-  .post(
-    ValidatorMiddleware(UserValidator.store),
-    wrapper(UserController.store),
-  );
+  .put(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(UserValidator),
+    wrapper(UserController.update),
+  )
+  .post(ValidatorMiddleware(UserValidator), wrapper(UserController.store));
+routes.use(
+  '/users/:id',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(UserValidator),
+);
 routes
   .route('/users/:id')
   .get(AuthenticationMiddleware, wrapper(UserController.show))
   .put(
     AuthenticationMiddleware,
-    ValidatorMiddleware(UserValidator.update),
+    ValidatorMiddleware(UserValidator),
     wrapper(UserController.update),
   )
   .delete(AuthenticationMiddleware, wrapper(UserController.delete));
@@ -126,7 +178,16 @@ routes
 routes
   .route('/whyus')
   .get(wrapper(WhyUsController.index))
-  .post(wrapper(WhyUsController.store));
+  .post(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(WhyUsValidator),
+    wrapper(WhyUsController.store),
+  );
+routes.use(
+  '/whyus/:id',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(WhyUsValidator),
+);
 routes
   .route('/whyus/:id')
   .get(wrapper(WhyUsController.show))
@@ -136,7 +197,16 @@ routes
 routes
   .route('/heroes')
   .get(wrapper(HeroController.index))
-  .post(wrapper(HeroController.store));
+  .post(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(HeroValidator),
+    wrapper(HeroController.store),
+  );
+routes.use(
+  '/heroes/:id',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(HeroValidator),
+);
 routes
   .route('/heroes/:id')
   .get(wrapper(HeroController.show))
