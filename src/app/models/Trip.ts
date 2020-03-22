@@ -171,14 +171,14 @@ export const factory = (sequelize: Sequelize): void =>
 export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
+  Trip.hasMany(models.PaymentPlan, {
+    foreignKey: 'tripId',
+    as: 'paymentPlans',
+  });
   Trip.belongsToMany(models.Include, {
     through: 'TripInclude',
     foreignKey: 'tripId',
     timestamps: false,
     as: 'includes',
   });
-  // Trip.hasMany(models.Event, {
-  //   foreignKey: 'TripId',
-  //   as: 'events',
-  // });
 };

@@ -9,4 +9,5 @@ export { default as UserController } from './UserController';
 export { default as WhyUsController } from './WhyUsController';
 export { default as HeroController } from './HeroController';
 export { default as TripController } from './TripController';
+export { default as PaymentPlanController } from './PaymentPlanController';
 export { default as IncludeController } from './IncludeController';

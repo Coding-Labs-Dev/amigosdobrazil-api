@@ -26,6 +26,7 @@ import {
   HeroController,
   SessionController,
   TripController,
+  PaymentPlanController,
   IncludeController,
 } from '@controllers/index';
 
@@ -44,6 +45,7 @@ import {
   UploadValidator,
   SessionValidator,
   TripValidator,
+  PaymentPlanValidator,
   IncludeValidator,
 } from '@validators/index';
 
@@ -237,6 +239,11 @@ routes
     ValidatorMiddleware(TripValidator),
     wrapper(TripController.delete),
   );
+
+/**
+ *  Admin Only Routes
+ */
+
 routes.use(
   '/includes',
   AuthenticationMiddleware,
@@ -251,4 +258,20 @@ routes
   .put(wrapper(IncludeController.update))
   .get(wrapper(IncludeController.show))
   .delete(wrapper(IncludeController.delete));
+
+routes.use(
+  '/paymentplans',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(PaymentPlanValidator),
+);
+routes
+  .route('/includes')
+  .get(wrapper(PaymentPlanController.index))
+  .post(wrapper(PaymentPlanController.store));
+routes
+  .route('/includes/:id')
+  .put(wrapper(PaymentPlanController.update))
+  .get(wrapper(PaymentPlanController.show))
+  .delete(wrapper(PaymentPlanController.delete));
+
 export default routes;

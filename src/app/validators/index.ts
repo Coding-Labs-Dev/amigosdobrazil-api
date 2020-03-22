@@ -8,4 +8,5 @@ export { default as UploadValidator } from './WhyUsValidator';
 export { default as UserValidator } from './UserValidator';
 export { default as SessionValidator } from './SessionValidator';
 export { default as TripValidator } from './TripValidator';
+export { default as PaymentPlanValidator } from './PaymentPlanValidator';
 export { default as IncludeValidator } from './IncludeValidator';
