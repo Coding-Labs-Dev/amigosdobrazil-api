@@ -1,4 +1,3 @@
-cat > ./src/app/models/$1.ts << EOF
 import {
   Sequelize,
   Model,
@@ -7,30 +6,34 @@ import {
   BuildOptions,
 } from 'sequelize';
 
-export interface $1Attributes {
+export interface IncludesAttributes {
   readonly id: number;
-
+  readonly description: string;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
 
-type $1Model = Model & $1Attributes;
+type IncludesModel = Model & IncludesAttributes;
 
-type $1Static = typeof Model & {
-  new (values?: object, options?: BuildOptions): $1Model;
+type IncludesStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): IncludesModel;
 } & {
   _defaults: { [key: string]: { [key: string]: object | string | boolean } };
 };
 
-const $1Attributes = {
+const IncludesAttributes = {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
   },
-
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -40,8 +43,10 @@ const $1Attributes = {
   updatedAt: { type: DataTypes.DATE, allowNull: false },
 };
 
-export default class $1 extends Model<$1Model, $1Static> {
+export default class Includes extends Model<IncludesModel, IncludesStatic> {
   readonly id: number;
+
+  readonly description: string;
 
   readonly deleted: boolean;
 
@@ -51,20 +56,15 @@ export default class $1 extends Model<$1Model, $1Static> {
 }
 
 export const factory = (sequelize: Sequelize): void =>
-  $1.init($1Attributes, { sequelize, tableName: '$1s' });
+  Includes.init(IncludesAttributes, { sequelize, tableName: 'Includess' });
 
 export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
-  // $1.belongsToMany(models.Email, {
-  //   through: 'UserEmails',
-  //   foreignKey: '$1Id',
-  //   timestamps: false,
-  //   as: 'emails',
-  // });
-  // $1.hasMany(models.Event, {
-  //   foreignKey: '$1Id',
-  //   as: 'events',
-  // });
+  Includes.belongsToMany(models.Trip, {
+    through: 'TripInclude',
+    foreignKey: 'includeId',
+    timestamps: false,
+    as: 'trips',
+  });
 };
-EOF

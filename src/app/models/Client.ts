@@ -21,7 +21,7 @@ export interface ClientAttributes {
   readonly notes?: string;
   readonly deleted: boolean;
   readonly createdAt: Date;
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 type ClientModel = Model & ClientAttributes;
@@ -123,7 +123,7 @@ export default class Client extends Model<ClientModel, ClientStatic> {
 
   readonly createdAt: Date;
 
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

@@ -22,7 +22,7 @@ export interface HeroAttributes {
   readonly opacity: number;
   readonly deleted: boolean;
   readonly createdAt: Date;
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 type HeroModel = Model & HeroAttributes;
@@ -97,7 +97,7 @@ export default class Hero extends Model<HeroModel, HeroStatic> {
 
   readonly createdAt: Date;
 
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

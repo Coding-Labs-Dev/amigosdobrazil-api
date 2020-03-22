@@ -25,6 +25,8 @@ import {
   WhyUsController,
   HeroController,
   SessionController,
+  TripController,
+  IncludeController,
 } from '@controllers/index';
 
 /**
@@ -41,6 +43,8 @@ import {
   UserValidator,
   UploadValidator,
   SessionValidator,
+  TripValidator,
+  IncludeValidator,
 } from '@validators/index';
 
 function wrapper(
@@ -212,5 +216,39 @@ routes
   .get(wrapper(HeroController.show))
   .put(wrapper(HeroController.update))
   .delete(wrapper(HeroController.delete));
-
+routes
+  .route('/trips')
+  .get(wrapper(TripController.index))
+  .post(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(TripValidator),
+    wrapper(TripController.store),
+  );
+routes
+  .route('/trips/:id')
+  .get(ValidatorMiddleware(TripValidator), wrapper(TripController.show))
+  .put(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(TripValidator),
+    wrapper(TripController.update),
+  )
+  .delete(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(TripValidator),
+    wrapper(TripController.delete),
+  );
+routes.use(
+  '/includes',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(IncludeValidator),
+);
+routes
+  .route('/includes')
+  .get(wrapper(IncludeController.index))
+  .post(wrapper(IncludeController.store));
+routes
+  .route('/includes/:id')
+  .put(wrapper(IncludeController.update))
+  .get(wrapper(IncludeController.show))
+  .delete(wrapper(IncludeController.delete));
 export default routes;

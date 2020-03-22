@@ -6,3 +6,5 @@ export { default as Testimonial } from './Testimonial';
 export { default as User } from './User';
 export { default as WhyUs } from './WhyUs';
 export { default as Hero } from './Hero';
+export { default as Trip } from './Trip';
+export { default as Include } from './Include';

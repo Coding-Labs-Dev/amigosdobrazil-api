@@ -8,3 +8,5 @@ export { default as UploadFileController } from './UploadFileController';
 export { default as UserController } from './UserController';
 export { default as WhyUsController } from './WhyUsController';
 export { default as HeroController } from './HeroController';
+export { default as TripController } from './TripController';
+export { default as IncludeController } from './IncludeController';

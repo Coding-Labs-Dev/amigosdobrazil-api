@@ -19,7 +19,7 @@ export interface SettingAttributes {
   readonly altPhone?: string;
   readonly deleted: boolean;
   readonly createdAt: Date;
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 type SettingModel = Model & SettingAttributes;
@@ -107,7 +107,7 @@ export default class Setting extends Model<SettingModel, SettingStatic> {
 
   readonly createdAt: Date;
 
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 export const factory = (sequelize: Sequelize): void =>

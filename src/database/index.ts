@@ -22,6 +22,14 @@ import {
 } from '@models/Hero';
 import { factory as UserFactory } from '@models/User';
 import { factory as WhyUsFactory } from '@models/WhyUs';
+import {
+  factory as TripFactory,
+  associate as TripAssociate,
+} from '@models/Trip';
+import {
+  factory as IncludeFactory,
+  associate as IncludeAssociate,
+} from '@models/Include';
 
 const models = [
   FileFactory,
@@ -32,9 +40,17 @@ const models = [
   UserFactory,
   WhyUsFactory,
   HeroFactory,
+  TripFactory,
+  IncludeFactory,
 ];
 
-const associates = [FileAssociate, TestimonialAssociate, HeroAssociate];
+const associates = [
+  FileAssociate,
+  TestimonialAssociate,
+  HeroAssociate,
+  TripAssociate,
+  IncludeAssociate,
+];
 
 class Database {
   public connection: Sequelize;

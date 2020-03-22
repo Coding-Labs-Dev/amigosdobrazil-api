@@ -16,7 +16,7 @@ export interface UserAttributes {
   readonly passwordHash: string;
   readonly deleted: boolean;
   readonly createdAt: Date;
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 }
 
 type UserModel = Model & UserAttributes;
@@ -74,7 +74,7 @@ export default class User extends Model<UserModel, UserStatic> {
 
   readonly createdAt: Date;
 
-  readonly upatedAt: Date;
+  readonly updatedAt: Date;
 
   async checkPassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.passwordHash);
