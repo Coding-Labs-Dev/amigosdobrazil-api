@@ -1,0 +1,69 @@
+service: amigosdobrazil-api
+
+custom:
+  serverless-offline:
+    port: 3333
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      forceInclude:
+        - pg
+        - pg-hstore
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-webpack
+  - serverless-pseudo-parameters
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  stage: staging
+
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+        - 's3:GetObject'
+        - 's3:DeleteObject'
+      Resource: 'arn:aws:s3:::${env:S3_BUCKET}/*'
+    - Effect: 'Allow'
+      Action:
+        - 'ses:GetSendQuota'
+        - 'ses:CreateTemplate'
+      Resource: '*'
+    - Effect: 'Allow'
+      Action:
+        - 'sqs:DeleteMessage'
+        - 'sqs:GetQueueUrl'
+        - 'sqs:ChangeMessageVisibility'
+        - 'sqs:SendMessageBatch'
+        - 'sqs:ReceiveMessage'
+        - 'sqs:SendMessage'
+        - 'sqs:GetQueueAttributes'
+        - 'sqs:ListQueueTags'
+        - 'sqs:ListDeadLetterSourceQueues'
+        - 'sqs:DeleteMessageBatch'
+        - 'sqs:ChangeMessageVisibilityBatch'
+        - 'sqs:SetQueueAttributes'
+      Resource: 'arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:${env:SQS_QUEUE_NAME}'
+
+functions:
+  app:
+    handler: src/handler.application
+    timeout: 10
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+    vpc:
+      securityGroupIds:
+        - ${env:SEC_GROUP}
+      subnetIds:
+        - ${env:SUBNET_1}
+        - ${env:SUBNET_2}
+        - ${env:SUBNET_3}
+        - ${env:SUBNET_4}
+        - ${env:SUBNET_5}
+        - ${env:SUBNET_6}
