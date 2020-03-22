@@ -27,8 +27,8 @@ import {
   SessionController,
   TripController,
   PaymentPlanController,
-  IncludeController,
   ItineraryController,
+  IncludeController,
 } from '@controllers/index';
 
 /**
@@ -47,8 +47,8 @@ import {
   SessionValidator,
   TripValidator,
   PaymentPlanValidator,
-  IncludeValidator,
   ItineraryValidator,
+  IncludeValidator,
 } from '@validators/index';
 
 function wrapper(
