@@ -31,6 +31,10 @@ import {
   associate as PaymentPlanAssociate,
 } from '@models/PaymentPlan';
 import {
+  factory as ItineraryFactory,
+  associate as ItineraryAssociate,
+} from '@models/Itinerary';
+import {
   factory as IncludeFactory,
   associate as IncludeAssociate,
 } from '@models/Include';
@@ -46,6 +50,7 @@ const models = [
   HeroFactory,
   TripFactory,
   PaymentPlanFactory,
+  ItineraryFactory,
   IncludeFactory,
 ];
 
@@ -55,6 +60,7 @@ const associates = [
   HeroAssociate,
   TripAssociate,
   PaymentPlanAssociate,
+  ItineraryAssociate,
   IncludeAssociate,
 ];
 

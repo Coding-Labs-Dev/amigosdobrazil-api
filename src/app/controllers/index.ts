@@ -10,4 +10,5 @@ export { default as WhyUsController } from './WhyUsController';
 export { default as HeroController } from './HeroController';
 export { default as TripController } from './TripController';
 export { default as PaymentPlanController } from './PaymentPlanController';
+export { default as ItineraryController } from './ItineraryController';
 export { default as IncludeController } from './IncludeController';

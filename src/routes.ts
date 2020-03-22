@@ -28,6 +28,7 @@ import {
   TripController,
   PaymentPlanController,
   IncludeController,
+  ItineraryController,
 } from '@controllers/index';
 
 /**
@@ -47,6 +48,7 @@ import {
   TripValidator,
   PaymentPlanValidator,
   IncludeValidator,
+  ItineraryValidator,
 } from '@validators/index';
 
 function wrapper(
@@ -88,7 +90,6 @@ routes
   .route('/clients')
   .get(AuthenticationMiddleware, wrapper(ClientController.index))
   .post(ValidatorMiddleware(ClientValidator), wrapper(ClientController.store));
-
 routes.use(
   '/clients/:id',
   AuthenticationMiddleware,
@@ -126,7 +127,6 @@ routes
     ValidatorMiddleware(SettingValidator),
     wrapper(SettingController.store),
   );
-
 routes.use(
   '/settings/:id',
   AuthenticationMiddleware,
@@ -218,6 +218,7 @@ routes
   .get(wrapper(HeroController.show))
   .put(wrapper(HeroController.update))
   .delete(wrapper(HeroController.delete));
+
 routes
   .route('/trips')
   .get(wrapper(TripController.index))
@@ -265,13 +266,28 @@ routes.use(
   ValidatorMiddleware(PaymentPlanValidator),
 );
 routes
-  .route('/includes')
+  .route('/paymentplans')
   .get(wrapper(PaymentPlanController.index))
   .post(wrapper(PaymentPlanController.store));
 routes
-  .route('/includes/:id')
+  .route('/paymentplans/:id')
   .put(wrapper(PaymentPlanController.update))
   .get(wrapper(PaymentPlanController.show))
   .delete(wrapper(PaymentPlanController.delete));
+
+routes.use(
+  '/itineraries',
+  AuthenticationMiddleware,
+  ValidatorMiddleware(ItineraryValidator),
+);
+routes
+  .route('/itineraries')
+  .get(wrapper(ItineraryController.index))
+  .post(wrapper(ItineraryController.store));
+routes
+  .route('/itineraries/:id')
+  .put(wrapper(ItineraryController.update))
+  .get(wrapper(ItineraryController.show))
+  .delete(wrapper(ItineraryController.delete));
 
 export default routes;
