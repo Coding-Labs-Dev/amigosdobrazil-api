@@ -7,7 +7,7 @@ export default {
       featured: yup.boolean().required(),
       title: yup.string().required(),
       subTitle: yup.string().required(),
-      backgrundId: yup.number().required(),
+      backgroundId: yup.number().required(),
       backgroundPosition: yup
         .string()
         .oneOf([
@@ -44,7 +44,7 @@ export default {
       featured: yup.boolean(),
       title: yup.string(),
       subTitle: yup.string(),
-      backgrundId: yup.number(),
+      backgroundId: yup.number(),
       backgroundPosition: yup
         .string()
         .oneOf([

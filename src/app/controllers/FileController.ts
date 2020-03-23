@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import Sequelize from 'sequelize';
-
+import { PassThrough } from 'stream';
 import { File } from '@models/index';
+import { getFile } from '@utils/File';
 
 class FileController {
   async index(_req: Request, res: Response): Promise<Response> {
@@ -13,36 +14,38 @@ class FileController {
   }
 
   async store(req: Request, res: Response): Promise<Response> {
-    const { body } = req;
+    const { file: fileData } = req;
+    const { auth } = req;
 
-    const file = await File.create(body);
+    const { originalname, mimetype, filename } = fileData;
+
+    const [type, subType] = mimetype.split('/');
+
+    const file = await File.create({
+      file: filename,
+      originalName: originalname,
+      type,
+      subType,
+      userId: auth?.userId,
+    });
 
     return res.json(file);
   }
 
   async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const file = await File.findOne({
-      where: { id, deleted: false },
-    });
+
+    const file = await File.findOne({ where: { file: id } });
 
     if (!file) return res.status(404).send();
 
-    return res.json(file);
-  }
+    const fileData = await getFile(id);
 
-  async update(req: Request, res: Response): Promise<Response> {
-    const { body } = req;
-    const { id } = req.params;
-    const file = await File.findOne({
-      where: { id, deleted: false },
-    });
+    const readStream = new PassThrough();
+    readStream.end(fileData);
 
-    if (!file) return res.status(404).send();
-
-    await file.update(body);
-
-    return res.json(file);
+    res.set('Content-Type', `${file.type}/${file.subType}`);
+    return readStream.pipe(res);
   }
 
   async delete(req: Request, res: Response): Promise<Response> {

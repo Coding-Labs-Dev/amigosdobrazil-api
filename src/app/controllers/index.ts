@@ -13,3 +13,4 @@ export { default as PaymentPlanController } from './PaymentPlanController';
 export { default as ItineraryController } from './ItineraryController';
 export { default as IncludeController } from './IncludeController';
 export { default as DocumentController } from './DocumentController';
+export { default as NextTripController } from './NextTripController';

@@ -30,6 +30,7 @@ import {
   ItineraryController,
   IncludeController,
   DocumentController,
+  NextTripController,
 } from '@controllers/index';
 
 /**
@@ -44,7 +45,7 @@ import {
   TestimonialValidator,
   WhyUsValidator,
   UserValidator,
-  UploadValidator,
+  FileValidator,
   SessionValidator,
   TripValidator,
   PaymentPlanValidator,
@@ -64,22 +65,27 @@ function wrapper(
 
 const routes = Router();
 
-routes.post(
-  '/upload/:type',
-  ValidatorMiddleware(UploadValidator),
-  UploadFileMiddleware.single('file'),
-  wrapper(UploadFileController.store),
-);
-
 routes
   .route('/files')
-  .get(wrapper(FileController.index))
-  .post(wrapper(FileController.store));
+  .get(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(FileValidator),
+    wrapper(FileController.index),
+  )
+  .post(
+    AuthenticationMiddleware,
+    UploadFileMiddleware.single('file'),
+    ValidatorMiddleware(FileValidator),
+    wrapper(FileController.store),
+  );
 routes
   .route('/files/:id')
-  .get(wrapper(FileController.show))
-  .put(wrapper(FileController.update))
-  .delete(wrapper(FileController.delete));
+  .get(ValidatorMiddleware(FileValidator), wrapper(FileController.show))
+  .delete(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(FileValidator),
+    wrapper(FileController.delete),
+  );
 
 routes
   .route('/sessions')
@@ -242,6 +248,8 @@ routes
     ValidatorMiddleware(TripValidator),
     wrapper(TripController.delete),
   );
+
+routes.get('/nexttrips', wrapper(NextTripController.index));
 
 /**
  *  Admin Only Routes

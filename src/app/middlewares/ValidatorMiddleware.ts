@@ -5,6 +5,7 @@ import { ValidationError } from 'yup';
 interface ValidationShchema {
   params?: yup.Schema<object>;
   body?: yup.Schema<object>;
+  req?: yup.Schema<object>;
 }
 
 interface Validator {
@@ -65,28 +66,49 @@ export default function Validator(validator: Validator): RequestHandler {
 
     const validationSchema = getValidationSchema(method, url, validator);
 
-    if (!validationSchema) return next();
-
-    const { params, body } = validationSchema;
-
-    if (params) {
-      params
-        .validate(paramsData, { abortEarly: false })
-        .then(() => !body && next())
-        .catch(error => next(validateErrorFormater(error)));
-      if (!body) return undefined;
+    if (!validationSchema) {
+      if (process.env.NODE_ENV !== 'production')
+        console.log('Warning: No validation schema found');
+      return next();
     }
-    if (body) {
-      return body
-        .validate(bodyData, { abortEarly: false })
-        .then(() => next())
-        .catch(error => next(validateErrorFormater(error)));
+
+    const { params, body, req: requestValidator } = validationSchema;
+
+    if (!requestValidator && !params && !body) {
+      if (process.env.NODE_ENV !== 'production')
+        return next({
+          name: 'ServerError',
+          statusCode: 500,
+          message: 'Invalid Validation Schema',
+        });
+      return next({
+        statusCode: 500,
+      });
     }
-    return next({
-      name: 'ServerError',
-      statusCode: 500,
-      message: 'Invalid Validation Schema',
-    });
+
+    try {
+      if (requestValidator) {
+        requestValidator.validateSync(req, { abortEarly: false });
+        // .then(() => !params && !body && next())
+        // .catch(error => next(validateErrorFormater(error)));
+        if (!params && !body) return undefined;
+      }
+
+      if (params) {
+        params.validateSync(paramsData, { abortEarly: false });
+        //   .then(() => !body && next())
+        //   .catch(error => next(validateErrorFormater(error)));
+        // if (!body) return undefined;
+      }
+      if (body) {
+        body.validateSync(bodyData, { abortEarly: false });
+        // .then(() => next())
+        // .catch(error => next(validateErrorFormater(error)));
+      }
+      next();
+    } catch (error) {
+      next(validateErrorFormater(error));
+    }
   };
   return validate;
 }

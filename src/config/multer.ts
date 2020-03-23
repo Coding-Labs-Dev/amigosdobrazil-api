@@ -36,7 +36,9 @@ const multerConfig = {
       : multer.diskStorage({
           destination: resolve(__dirname, '..', '..', 'tmp'),
           filename: (_req, file, callback) => {
-            const filename = `${uuid()}${extname(file.originalname)}`;
+            const filename = `${uuid()}${extname(
+              file.originalname,
+            ).toLowerCase()}`;
             return callback(null, filename);
           },
         }),

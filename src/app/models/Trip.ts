@@ -6,6 +6,15 @@ import {
   BuildOptions,
 } from 'sequelize';
 
+import slugify from 'slugify';
+import moment from 'moment';
+
+slugify.extend({
+  '&': 'e',
+});
+
+moment.locale('pt');
+
 export interface TripAttributes {
   readonly id: number;
   readonly slug: string;
@@ -29,6 +38,7 @@ export interface TripAttributes {
   readonly destinationsQty: number;
   readonly departure: Date;
   readonly description: object;
+  readonly image?: { url: string };
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -113,6 +123,21 @@ const TripAttributes = {
     type: DataTypes.JSON,
     allowNull: false,
   },
+  date: {
+    type: DataTypes.VIRTUAL,
+    get(this: Trip): string {
+      return moment(this.departure).format('MMMM/YYYY');
+    },
+  },
+  background: {
+    type: DataTypes.VIRTUAL,
+    get(this: Trip): object {
+      return {
+        image: this.image?.url,
+        position: this.backgroundPosition,
+      };
+    },
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -125,7 +150,7 @@ const TripAttributes = {
 export default class Trip extends Model<TripModel, TripStatic> {
   readonly id: number;
 
-  readonly slug: string;
+  public slug: string;
 
   readonly featured: boolean;
 
@@ -158,6 +183,8 @@ export default class Trip extends Model<TripModel, TripStatic> {
 
   readonly description: object;
 
+  readonly image?: { url: string };
+
   readonly deleted: boolean;
 
   readonly createdAt: Date;
@@ -166,11 +193,31 @@ export default class Trip extends Model<TripModel, TripStatic> {
 }
 
 export const factory = (sequelize: Sequelize): void =>
-  Trip.init(TripAttributes, { sequelize, tableName: 'Trips' });
+  Trip.init(TripAttributes, {
+    sequelize,
+    tableName: 'Trips',
+    hooks: {
+      beforeValidate: (trip: Trip): void => {
+        const { title, departure } = trip;
+        const slug = slugify(
+          `${title} ${moment(departure).format('DD-MM-YYYY')}`,
+          {
+            lower: true,
+          },
+        );
+        // eslint-disable-next-line no-param-reassign
+        trip.slug = slug;
+      },
+    },
+  });
 
 export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
+  Trip.belongsTo(models.File, {
+    foreignKey: 'backgroundId',
+    as: 'image',
+  });
   Trip.hasMany(models.PaymentPlan, {
     foreignKey: 'tripId',
     as: 'paymentPlans',

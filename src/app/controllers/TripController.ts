@@ -23,7 +23,7 @@ class TripController {
   async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const trip = await Trip.findOne({
-      where: { id, deleted: false },
+      where: { slug: id, deleted: false },
     });
 
     if (!trip) return res.status(404).send();

@@ -1,22 +1,24 @@
 import fs from 'fs';
 import path from 'path';
-import { Readable } from 'stream';
 import S3 from 'aws-sdk/clients/s3';
 
 const s3 = new S3({ region: 'us-east-1' });
 
-export async function getFile(fileKey: string): Promise<Readable> {
+export async function getFile(fileKey: string): Promise<Buffer | null> {
   if (process.env.STORAGE === 's3') {
-    return s3
+    const file = await s3
       .getObject({
         Bucket: process.env.S3_BUCKET,
         Key: fileKey,
       })
-      .createReadStream();
+      .promise();
+    if (!file.Body) return null;
+    return Buffer.from(file.Body);
   }
 
-  const file = fs.readFileSync(path.resolve('/', 'tmp', fileKey));
-  return Readable.from(Buffer.from(file));
+  const file = fs.readFileSync(path.resolve(process.cwd(), 'tmp', fileKey));
+  if (!file) return null;
+  return file;
 }
 
 export async function deleteFile(fileKey: string): Promise<void> {
@@ -28,6 +30,6 @@ export async function deleteFile(fileKey: string): Promise<void> {
       })
       .promise();
   } else {
-    fs.unlinkSync(path.resolve('/', 'tmp', fileKey));
+    fs.unlinkSync(path.resolve(process.cwd(), 'tmp', fileKey));
   }
 }
