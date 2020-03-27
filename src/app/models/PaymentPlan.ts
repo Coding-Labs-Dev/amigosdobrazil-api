@@ -12,7 +12,9 @@ export interface PaymentPlanAttributes {
   readonly date: Date;
   readonly usd: number;
   readonly brl: number;
-  readonly installments: object;
+  readonly downPayment: number;
+  readonly installmentsQty: number;
+  readonly installmentsValue: number;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -45,15 +47,23 @@ const PaymentPlanAttributes = {
     allowNull: false,
   },
   usd: {
-    type: DataTypes.DECIMAL(2),
+    type: DataTypes.DECIMAL(10, 4),
     allowNull: false,
   },
   brl: {
-    type: DataTypes.DECIMAL(2),
+    type: DataTypes.DECIMAL(10, 4),
     allowNull: false,
   },
-  installments: {
-    type: DataTypes.JSON,
+  downPayment: {
+    type: DataTypes.DECIMAL(10, 4),
+    allowNull: false,
+  },
+  installmentsQty: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  installmentsValue: {
+    type: DataTypes.DECIMAL(10, 4),
     allowNull: false,
   },
   deleted: {
@@ -79,7 +89,11 @@ export default class PaymentPlan extends Model<
 
   readonly brl: number;
 
-  readonly installments: object;
+  readonly downPayment: number;
+
+  readonly installmentsQty: number;
+
+  readonly installmentsValue: number;
 
   readonly deleted: boolean;
 

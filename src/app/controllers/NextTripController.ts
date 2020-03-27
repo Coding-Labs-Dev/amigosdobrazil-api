@@ -5,15 +5,15 @@ class NextTripsController {
   async index(_req: Request, res: Response): Promise<Response> {
     return res.json(
       await Trip.findAll({
-        where: { deleted: false, featured: true },
-        order: [['departure', 'ASC']],
+        where: { deleted: false, active: true, featured: true },
         include: [
           {
             model: File,
             as: 'image',
-            attributes: ['id', 'file', 'url'],
+            attributes: ['url', 'file'],
           },
         ],
+        attributes: ['title', 'date', 'slug', 'background'],
       }),
     );
   }

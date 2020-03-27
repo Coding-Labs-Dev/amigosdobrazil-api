@@ -21,8 +21,11 @@ export interface TripAttributes {
   readonly featured: boolean;
   readonly title: string;
   readonly subTitle: string;
-  readonly backgrundId: number;
-  readonly backgroundPosition:
+  readonly backgroundId: number;
+
+  readonly background: string;
+  readonly bannerId: number;
+  readonly bannerPosition:
     | 'left top'
     | 'left center'
     | 'left bottom'
@@ -38,7 +41,24 @@ export interface TripAttributes {
   readonly destinationsQty: number;
   readonly departure: Date;
   readonly description: object;
-  readonly image?: { url: string };
+  readonly image: { url: string };
+  readonly bannerImage: { url: string };
+
+  readonly banner: {
+    url: string;
+    position:
+      | 'left top'
+      | 'left center'
+      | 'left bottom'
+      | 'right top'
+      | 'right center'
+      | 'right bottom'
+      | 'center top'
+      | 'center center'
+      | 'center bottom';
+  };
+  readonly bannerOpacity: number;
+  readonly active: boolean;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -83,7 +103,12 @@ const TripAttributes = {
     references: { model: 'Files', key: 'id' },
     allowNull: false,
   },
-  backgroundPosition: {
+  bannerId: {
+    type: DataTypes.INTEGER,
+    references: { model: 'Files', key: 'id' },
+    allowNull: false,
+  },
+  bannerPosition: {
     type: DataTypes.ENUM(
       'left top',
       'left center',
@@ -97,6 +122,11 @@ const TripAttributes = {
     ),
     allowNull: false,
     defaultValue: 'center center',
+  },
+  bannerOpacity: {
+    type: DataTypes.DECIMAL(1, 1),
+    allowNull: false,
+    default: 0.8,
   },
   titlePosition: {
     type: DataTypes.ENUM('top', 'center', 'bottom'),
@@ -131,12 +161,24 @@ const TripAttributes = {
   },
   background: {
     type: DataTypes.VIRTUAL,
+    get(this: Trip): string {
+      return this.image?.url;
+    },
+  },
+  banner: {
+    type: DataTypes.VIRTUAL,
     get(this: Trip): object {
       return {
-        image: this.image?.url,
-        position: this.backgroundPosition,
+        url: this.bannerImage?.url,
+        position: this.bannerPosition,
+        opacity: this.bannerOpacity,
       };
     },
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
   deleted: {
     type: DataTypes.BOOLEAN,
@@ -158,9 +200,13 @@ export default class Trip extends Model<TripModel, TripStatic> {
 
   readonly subTitle: string;
 
-  readonly backgrundId: number;
+  readonly backgroundId: number;
 
-  readonly backgroundPosition:
+  readonly background: string;
+
+  readonly bannerId: number;
+
+  readonly bannerPosition:
     | 'left top'
     | 'left center'
     | 'left bottom'
@@ -183,7 +229,27 @@ export default class Trip extends Model<TripModel, TripStatic> {
 
   readonly description: object;
 
-  readonly image?: { url: string };
+  readonly image: { url: string };
+
+  readonly bannerImage: { url: string };
+
+  readonly banner: {
+    url: string;
+    position:
+      | 'left top'
+      | 'left center'
+      | 'left bottom'
+      | 'right top'
+      | 'right center'
+      | 'right bottom'
+      | 'center top'
+      | 'center center'
+      | 'center bottom';
+  };
+
+  readonly bannerOpacity: number;
+
+  readonly active: boolean;
 
   readonly deleted: boolean;
 
@@ -218,14 +284,28 @@ export const associate = (models: {
     foreignKey: 'backgroundId',
     as: 'image',
   });
+  Trip.belongsTo(models.File, {
+    foreignKey: 'bannerId',
+    as: 'bannerImage',
+  });
   Trip.hasMany(models.PaymentPlan, {
     foreignKey: 'tripId',
     as: 'paymentPlans',
+  });
+  Trip.hasMany(models.Itinerary, {
+    foreignKey: 'tripId',
+    as: 'itinerary',
   });
   Trip.belongsToMany(models.Include, {
     through: 'TripInclude',
     foreignKey: 'tripId',
     timestamps: false,
     as: 'includes',
+  });
+  Trip.belongsToMany(models.Document, {
+    through: 'TripDocument',
+    foreignKey: 'tripId',
+    timestamps: false,
+    as: 'documents',
   });
 };

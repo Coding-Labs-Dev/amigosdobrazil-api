@@ -1,13 +1,27 @@
 import { Request, Response } from 'express';
-import Sequelize from 'sequelize';
 
-import { Trip } from '@models/index';
+import {
+  Trip,
+  File,
+  Itinerary,
+  Include,
+  Document,
+  PaymentPlan,
+} from '@models/index';
 
 class TripController {
   async index(_req: Request, res: Response): Promise<Response> {
     return res.json(
       await Trip.findAll({
         where: { deleted: false },
+        include: [
+          {
+            model: File,
+            as: 'image',
+            attributes: ['id', 'url', 'file'],
+          },
+        ],
+        attributes: ['date', 'slug', 'background', 'featured'],
       }),
     );
   }
@@ -15,7 +29,18 @@ class TripController {
   async store(req: Request, res: Response): Promise<Response> {
     const { body } = req;
 
+    const { includes = [], documents = [], itinerary = [] } = body;
+
+    delete body.includes;
+    delete body.documents;
+    delete body.itinerary;
+    delete body.paymentPlans;
+
     const trip = await Trip.create(body);
+
+    await trip.setIncludes(includes);
+    await trip.setDocuments(documents);
+    await trip.setItinerary(itinerary);
 
     return res.json(trip);
   }
@@ -24,6 +49,41 @@ class TripController {
     const { id } = req.params;
     const trip = await Trip.findOne({
       where: { slug: id, deleted: false },
+      include: [
+        {
+          model: File,
+          as: 'image',
+          attributes: ['id', 'file', 'url'],
+        },
+        {
+          model: File,
+          as: 'bannerImage',
+          attributes: ['id', 'file', 'url'],
+        },
+        {
+          model: Itinerary,
+          as: 'itinerary',
+        },
+        {
+          model: Include,
+          as: 'includes',
+          attributes: ['description'],
+        },
+        {
+          model: Document,
+          as: 'documents',
+          attributes: ['description'],
+        },
+        {
+          model: PaymentPlan,
+          as: 'paymentPlans',
+          // attributes: ['description'],
+        },
+      ],
+      order: [
+        ['itinerary', 'order', 'ASC'],
+        ['paymentPlans', 'date', 'ASC'],
+      ],
     });
 
     if (!trip) return res.status(404).send();
@@ -41,6 +101,12 @@ class TripController {
     if (!trip) return res.status(404).send();
 
     await trip.update(body);
+
+    const { includes = [], documents = [], itinerary = [] } = body;
+
+    await trip.setIncludes(includes);
+    await trip.setDocuments(documents);
+    await trip.setItinerary(itinerary);
 
     return res.json(trip);
   }

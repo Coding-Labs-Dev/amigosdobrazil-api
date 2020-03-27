@@ -2,7 +2,8 @@ import * as yup from 'yup';
 
 export default {
   store: {
-    params: yup.object().shape({
+    params: yup.object().shape({}),
+    body: yup.object().shape({
       name: yup
         .string()
         .min(3)
@@ -20,7 +21,6 @@ export default {
         .min(25)
         .required(),
     }),
-    body: yup.object().shape({}),
   },
   update: {
     params: yup.object().shape({

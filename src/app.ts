@@ -1,4 +1,5 @@
 import express, { Express } from 'express';
+import cors from 'cors';
 import serverless from 'serverless-http';
 import routes from './routes';
 import HttpExceptionHandler from './app/middlewares/HttpExceptionMiddleware';
@@ -16,6 +17,7 @@ class App {
   }
 
   middlewares(): void {
+    this.server.use(cors());
     this.server.use(express.json());
     if (process.env.NODE_ENV !== 'production')
       this.server.use((req, _res, next) => {

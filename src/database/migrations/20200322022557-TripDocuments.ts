@@ -5,7 +5,7 @@ module.exports = {
     queryInterface: QueryInterface,
     Sequelize: typeof DataTypes,
   ): Promise<void> => {
-    return queryInterface.createTable('TripDocuments', {
+    return queryInterface.createTable('TripDocument', {
       tripId: {
         type: Sequelize.INTEGER,
         references: { model: 'Trips', key: 'id' },
@@ -13,7 +13,7 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false,
       },
-      DocumentId: {
+      documentId: {
         type: Sequelize.INTEGER,
         references: { model: 'Documents', key: 'id' },
         onUpdate: 'CASCADE',
@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: (queryInterface: QueryInterface): Promise<void> => {
-    return queryInterface.dropTable('TripDocuments');
+    return queryInterface.dropTable('TripDocument');
   },
 };

@@ -16,9 +16,7 @@ export default {
     }),
   },
   update: {
-    params: yup.object().shape({
-      id: yup.string().required(),
-    }),
+    params: yup.object().shape({}),
     body: yup.object().shape({
       name: yup.string(),
       email: yup.string(),
@@ -30,11 +28,5 @@ export default {
       mainPhone: yup.string(),
       altPhone: yup.string(),
     }),
-  },
-  delete: {
-    params: yup.object().shape({
-      id: yup.string().required(),
-    }),
-    body: yup.object().shape({}),
   },
 };

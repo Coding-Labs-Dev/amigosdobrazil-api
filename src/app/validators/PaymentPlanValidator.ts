@@ -8,7 +8,9 @@ export default {
       date: yup.date().required(),
       usd: yup.number().required(),
       brl: yup.number().required(),
-      installments: yup.object().required(),
+      downPayment: yup.number().required(),
+      installmentsQty: yup.number().required(),
+      installmentsValue: yup.number().required(),
     }),
   },
   update: {
@@ -20,7 +22,9 @@ export default {
       date: yup.date(),
       usd: yup.number(),
       brl: yup.number(),
-      installments: yup.object(),
+      downPayment: yup.number().required(),
+      installmentsQty: yup.number().required(),
+      installmentsValue: yup.number().required(),
     }),
   },
   delete: {

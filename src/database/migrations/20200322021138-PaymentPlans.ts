@@ -24,15 +24,23 @@ module.exports = {
         allowNull: false,
       },
       usd: {
-        type: Sequelize.DECIMAL(2),
+        type: Sequelize.DECIMAL(10, 4),
         allowNull: false,
       },
       brl: {
-        type: Sequelize.DECIMAL(2),
+        type: Sequelize.DECIMAL(10, 4),
         allowNull: false,
       },
-      installments: {
-        type: Sequelize.JSON,
+      downPayment: {
+        type: Sequelize.DECIMAL(10, 4),
+        allowNull: false,
+      },
+      installmentsQty: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      installmentsValue: {
+        type: Sequelize.DECIMAL(10, 4),
         allowNull: false,
       },
       deleted: {

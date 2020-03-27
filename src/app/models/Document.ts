@@ -62,7 +62,7 @@ export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
   Document.belongsToMany(models.Trip, {
-    through: 'TripDocuments',
+    through: 'TripDocument',
     foreignKey: 'documentId',
     timestamps: false,
     as: 'trips',

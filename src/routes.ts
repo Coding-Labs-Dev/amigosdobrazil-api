@@ -129,22 +129,17 @@ routes
 
 routes
   .route('/settings')
-  .get(wrapper(SettingController.index))
   .post(
     AuthenticationMiddleware,
     ValidatorMiddleware(SettingValidator),
     wrapper(SettingController.store),
-  );
-routes.use(
-  '/settings/:id',
-  AuthenticationMiddleware,
-  ValidatorMiddleware(SettingValidator),
-);
-routes
-  .route('/settings/:id')
+  )
   .get(wrapper(SettingController.show))
-  .put(wrapper(SettingController.update))
-  .delete(wrapper(SettingController.delete));
+  .put(
+    AuthenticationMiddleware,
+    ValidatorMiddleware(SettingValidator),
+    wrapper(SettingController.update),
+  );
 
 routes
   .route('/testimonials')

@@ -36,7 +36,12 @@ module.exports = {
         references: { model: 'Files', key: 'id' },
         allowNull: false,
       },
-      backgroundPosition: {
+      bannerId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Files', key: 'id' },
+        allowNull: false,
+      },
+      bannerPosition: {
         type: Sequelize.ENUM(
           'left top',
           'left center',
@@ -75,6 +80,16 @@ module.exports = {
       description: {
         type: Sequelize.JSON,
         allowNull: false,
+      },
+      bannerOpacity: {
+        type: Sequelize.DECIMAL(1, 1),
+        allowNull: false,
+        defaultValue: 0.8,
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       deleted: {
         type: Sequelize.BOOLEAN,
