@@ -38,4 +38,4 @@ class App {
 
 export const { server } = new App();
 
-export default serverless(server);
+export default serverless(server, { binary: ['image/*', 'video/*'] });

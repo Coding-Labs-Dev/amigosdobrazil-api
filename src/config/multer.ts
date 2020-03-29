@@ -27,10 +27,9 @@ const multerConfig = {
       ? multerS3({
           s3: S3,
           bucket: process.env.S3_BUCKET,
-          key: (req: Request, file, cb) => {
+          key: (_req: Request, file, cb) => {
             const filename = `${uuid()}${extname(file.originalname)}`;
-            const { type } = req.params;
-            return cb(null, `uploads/${type}/${filename}`);
+            return cb(null, `${filename}`);
           },
         })
       : multer.diskStorage({

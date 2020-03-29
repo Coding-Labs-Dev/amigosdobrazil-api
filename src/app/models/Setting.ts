@@ -1,10 +1,4 @@
-import {
-  Sequelize,
-  Model,
-  ModelCtor,
-  DataTypes,
-  BuildOptions,
-} from 'sequelize';
+import { Sequelize, Model, DataTypes, BuildOptions } from 'sequelize';
 
 export interface SettingAttributes {
   readonly id: number;

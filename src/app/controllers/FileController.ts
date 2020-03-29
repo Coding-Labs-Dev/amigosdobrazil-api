@@ -1,6 +1,4 @@
-import { Request, Response, response } from 'express';
-import Sequelize from 'sequelize';
-import { PassThrough } from 'stream';
+import { Request, Response } from 'express';
 import { File } from '@models/index';
 import { getFile } from '@utils/File';
 
@@ -17,12 +15,12 @@ class FileController {
     const { file: fileData } = req;
     const { auth } = req;
 
-    const { originalname, mimetype, filename } = fileData;
+    const { originalname, mimetype, filename, key } = fileData;
 
     const [type, subType] = mimetype.split('/');
 
     const file = await File.create({
-      file: filename,
+      file: key || filename,
       originalName: originalname,
       type,
       subType,
@@ -41,11 +39,10 @@ class FileController {
 
     const fileData = await getFile(id);
 
-    const readStream = new PassThrough();
-    readStream.end(fileData);
+    if (!fileData) return res.status(404).send();
 
     res.set('Content-Type', `${file.type}/${file.subType}`);
-    return readStream.pipe(res);
+    return res.send(fileData);
   }
 
   async delete(req: Request, res: Response): Promise<Response> {

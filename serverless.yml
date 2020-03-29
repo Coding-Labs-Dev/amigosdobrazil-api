@@ -22,6 +22,10 @@ provider:
   region: us-east-1
   stage: staging
 
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+
   iamRoleStatements:
     - Effect: 'Allow'
       Action:

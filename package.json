@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/server.ts",
+    "staging": "cross-env NODE_ENV=staging nodemon src/server.ts",
     "test": "cross-env NODE_ENV=test jest --watch --i",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --watch",
     "debug": "cross-env SLS_DEBUG=* node --inspect-brk ./node_modules/.bin/serverless offline start -t --env local",
@@ -15,6 +16,8 @@
     "make:controller": "./scripts/create_controller.sh",
     "make:validator": "./scripts/create_validator.sh",
     "migrations:run": "./scripts/migrate.sh",
+    "migrations:copy": "./scripts/copy_migrations.sh",
+    "seeds:copy": "./scripts/copy_seeds.sh",
     "database:reset": "yarn sequelize db:migrate:undo:all && yarn migrations:run && yarn sequelize db:seed:all"
   },
   "devDependencies": {
