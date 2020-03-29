@@ -18,10 +18,28 @@ class TripController {
           {
             model: File,
             as: 'image',
-            attributes: ['id', 'url', 'file'],
+            attributes: ['id', 'file', 'url'],
+          },
+          {
+            model: File,
+            as: 'bannerImage',
+            attributes: ['id', 'file', 'url'],
           },
         ],
-        attributes: ['date', 'slug', 'background', 'featured'],
+        attributes: [
+          'days',
+          'destinationsQty',
+          'minSize',
+          'departure',
+          'date',
+          'slug',
+          'background',
+          'featured',
+          'banner',
+          'title',
+          'subTitle',
+          'description',
+        ],
       }),
     );
   }
