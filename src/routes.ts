@@ -31,6 +31,7 @@ import {
   IncludeController,
   DocumentController,
   NextTripController,
+  TOSController,
 } from '@controllers/index';
 
 /**
@@ -140,6 +141,8 @@ routes
     ValidatorMiddleware(SettingValidator),
     wrapper(SettingController.update),
   );
+
+routes.get('/tos', wrapper(TOSController.show));
 
 routes
   .route('/testimonials')
