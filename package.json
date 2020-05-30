@@ -5,7 +5,7 @@
   "author": "Luis Ramirez <luis@codinglabs.dev>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon src/server.ts",
+    "dev": "cross-env NODE_ENV=local nodemon src/server.ts",
     "staging": "cross-env NODE_ENV=staging nodemon src/server.ts",
     "test": "cross-env NODE_ENV=test jest --watch --i",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --watch",
@@ -70,10 +70,12 @@
   },
   "dependencies": {
     "aws-sdk": "^2.633.0",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "fast-xml-parser": "^3.17.3",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "multer": "^1.4.2",
