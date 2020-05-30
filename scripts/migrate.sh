@@ -24,12 +24,6 @@ echo " -> Compilation completed."
 echo ""
 
 echo ""
-echo " -> Step 3/4: Copying resources required for migration."
-cp -rf ./src/database/dump ./migrations/database/
-echo " -> Copying resources completed."
-echo ""
-
-echo ""
 echo " -> Step 4/4: Starting migration."
 echo ""
 yarn cross-env NODE_ENV=$ENVIRONMENT sequelize db:migrate

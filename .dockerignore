@@ -1,0 +1,6 @@
+__tests__
+.database
+.migrations
+.serverless
+.vscode
+node_modules

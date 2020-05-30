@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=amigos_do_brazil
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./.database:/var/lib/postgresql/database
+    ports:
+      - "5432:5432"
+    networks:
+      - amigos_do_brazil
+  server:
+    build: .
+    environment:
+      - NODE_ENV=local
+    ports:
+      - "3333:3333"
+    volumes:
+      - ./src:/usr/src/app/src
+    depends_on:
+      - database
+    networks:
+      - amigos_do_brazil
+networks:
+  amigos_do_brazil:
