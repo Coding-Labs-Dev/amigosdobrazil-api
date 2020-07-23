@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
-  database:
+  postgres:
     image: postgres
     restart: always
     environment:
@@ -10,22 +10,30 @@ services:
       - POSTGRES_DB=amigos_do_brazil
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - ./.database:/var/lib/postgresql/database
+      - ./.database:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - amigos_do_brazil
-  server:
+  server.test:
     build: .
     environment:
       - NODE_ENV=local
+    env_file: ./.env.local
     ports:
       - "3333:3333"
     volumes:
+      - ./.migrations:/usr/src/app/.migrations
+      - ./seeders:/usr/src/app/seeders
       - ./src:/usr/src/app/src
+      - ./tmp:/usr/src/app/tmp
     depends_on:
-      - database
-    networks:
-      - amigos_do_brazil
-networks:
-  amigos_do_brazil:
+      - postgres
+  web:
+    build: ../amigosdobrazil-nextjs
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - ../amigosdobrazil-nextjs/src:/usr/src/app/src
+      - ../amigosdobrazil-nextjs/public:/usr/src/app/public
+    depends_on:
+      - server.test

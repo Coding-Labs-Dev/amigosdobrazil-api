@@ -1,6 +1,6 @@
 # Read arguments passed to the script.
 if [ -z "$1" ]; then
- ENVIRONMENT='development'
+ ENVIRONMENT='local'
 else
  ENVIRONMENT="$1"
 fi
@@ -11,6 +11,7 @@ echo ""
 
 echo " -> Step 1/4: Removing old migrations."
 echo ""
+ mkdir -p ./.migrations
  rm ./.migrations/*.js
 echo ""
 echo " -> Compilation completed."

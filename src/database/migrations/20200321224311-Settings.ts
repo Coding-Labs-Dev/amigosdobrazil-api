@@ -53,6 +53,14 @@ module.exports = {
         allowNull: false,
         defaultValue: {},
       },
+      maxInstallments: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      maxNoInterestInstallments: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

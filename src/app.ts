@@ -1,6 +1,8 @@
 import express, { Express } from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import serverless from 'serverless-http';
+import morganBody from 'morgan-body';
 import routes from './routes';
 import HttpExceptionHandler from './app/middlewares/HttpExceptionMiddleware';
 
@@ -18,13 +20,10 @@ class App {
 
   middlewares(): void {
     this.server.use(cors());
-    this.server.use(express.json());
-    if (process.env.NODE_ENV !== 'production')
-      this.server.use((req, _res, next) => {
-        const { method, url, params, body } = req;
-        console.dir({ method, url, params, body }, { depth: 3 });
-        next();
-      });
+    this.server.use(bodyParser.json());
+    morganBody(this.server, {
+      maxBodyLength: 4000,
+    });
   }
 
   routes(): void {

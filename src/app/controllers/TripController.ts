@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { getActivePlanIndex } from '@utils/ActivePlan';
+import { getCanBook } from '@utils/CanBook';
 
 import {
   Trip,
@@ -8,6 +10,7 @@ import {
   Document,
   PaymentPlan,
 } from '@models/index';
+import TransportPlan from '@models/TransportPlan';
 
 class TripController {
   async index(_req: Request, res: Response): Promise<Response> {
@@ -66,7 +69,7 @@ class TripController {
   async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const trip = await Trip.findOne({
-      where: { slug: id, deleted: false },
+      where: { slug: id, active: true, deleted: false },
       include: [
         {
           model: File,
@@ -95,7 +98,10 @@ class TripController {
         {
           model: PaymentPlan,
           as: 'paymentPlans',
-          // attributes: ['description'],
+        },
+        {
+          model: TransportPlan,
+          as: 'transportPlans',
         },
       ],
       order: [
@@ -106,7 +112,14 @@ class TripController {
 
     if (!trip) return res.status(404).send();
 
-    return res.json(trip);
+    const { paymentPlans } = trip;
+
+    const activePlanIndex = getActivePlanIndex(paymentPlans);
+
+    const canBook =
+      activePlanIndex >= 0 && getCanBook(trip.bookStart, trip.bookEnd);
+
+    return res.json({ ...trip.toJSON(), canBook, activePlanIndex });
   }
 
   async update(req: Request, res: Response): Promise<Response> {

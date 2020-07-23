@@ -5,7 +5,7 @@ module.exports = {
     queryInterface: QueryInterface,
     Sequelize: typeof DataTypes,
   ): Promise<void> => {
-    return queryInterface.createTable('Itineraries', {
+    return queryInterface.createTable('TransportPlans', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -19,27 +19,17 @@ module.exports = {
         onDelete: 'SET NULL',
         allowNull: false,
       },
-      title: {
-        type: Sequelize.STRING,
+      usd: {
+        type: Sequelize.DECIMAL(10, 4),
         allowNull: false,
       },
-      description: {
-        type: Sequelize.STRING(3000),
+      rate: {
+        type: Sequelize.DECIMAL(10, 4),
         allowNull: false,
       },
-      order: {
+      installmentsQty: {
         type: Sequelize.INTEGER,
         allowNull: false,
-      },
-      mainDestination: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
-      mainDestinationTitle: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: '',
       },
       deleted: {
         type: Sequelize.BOOLEAN,
@@ -52,6 +42,6 @@ module.exports = {
   },
 
   down: (queryInterface: QueryInterface): Promise<void> => {
-    return queryInterface.dropTable('Itineraries');
+    return queryInterface.dropTable('TransportPlans');
   },
 };

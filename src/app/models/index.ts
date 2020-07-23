@@ -8,6 +8,7 @@ export { default as WhyUs } from './WhyUs';
 export { default as Hero } from './Hero';
 export { default as Trip } from './Trip';
 export { default as PaymentPlan } from './PaymentPlan';
+export { default as TransportPlan } from './TransportPlan';
 export { default as Itinerary } from './Itinerary';
 export { default as Include } from './Include';
 export { default as Document } from './Document';

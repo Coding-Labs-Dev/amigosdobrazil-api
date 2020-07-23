@@ -31,6 +31,10 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 4),
         allowNull: false,
       },
+      reservationFee: {
+        type: Sequelize.DECIMAL(10, 4),
+        allowNull: false,
+      },
       downPayment: {
         type: Sequelize.DECIMAL(10, 4),
         allowNull: false,

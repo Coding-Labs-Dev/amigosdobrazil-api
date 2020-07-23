@@ -5,7 +5,7 @@
   "author": "Luis Ramirez <luis@codinglabs.dev>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=local nodemon src/server.ts",
+    "dev": "cross-env nodemon src/server.ts",
     "staging": "cross-env NODE_ENV=staging nodemon src/server.ts",
     "test": "cross-env NODE_ENV=test jest --watch --i",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --watch",
@@ -18,7 +18,10 @@
     "migrations:run": "./scripts/migrate.sh",
     "migrations:copy": "./scripts/copy_migrations.sh",
     "seeds:copy": "./scripts/copy_seeds.sh",
-    "database:reset": "yarn sequelize db:migrate:undo:all && yarn migrations:run && yarn sequelize db:seed:all"
+    "database:reset": "yarn sequelize db:migrate:undo:all && yarn migrations:run && yarn sequelize db:seed:all",
+    "docker:db:migrate": "docker-compose exec server.test bash ./scripts/migrate.sh",
+    "docker:db:seed": "docker-compose exec server.test yarn sequelize db:seed:all",
+    "docker:db:reset": "docker-compose exec server.test yarn sequelize db:migrate:undo:all && docker-compose exec server.test bash ./scripts/migrate.sh && docker-compose exec server.test yarn sequelize db:seed:all"
   },
   "devDependencies": {
     "@serverless/eslint-config": "^1.2.1",
@@ -72,12 +75,15 @@
     "aws-sdk": "^2.633.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fast-xml-parser": "^3.17.3",
     "jsonwebtoken": "^8.5.1",
+    "mockdate": "^3.0.2",
     "moment": "^2.24.0",
+    "morgan-body": "^2.4.14",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "pg": "^7.18.2",

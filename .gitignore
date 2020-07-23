@@ -20,3 +20,6 @@ __coverage__
 
 #vscode
 .vscode
+
+#database
+.database

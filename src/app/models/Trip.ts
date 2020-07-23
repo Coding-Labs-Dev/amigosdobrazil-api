@@ -8,6 +8,8 @@ import {
 
 import slugify from 'slugify';
 import moment from 'moment';
+import { PaymentPlanAttributes } from './PaymentPlan';
+import { Include, Document, Itinerary } from '.';
 
 slugify.extend({
   '&': 'e',
@@ -36,14 +38,16 @@ export interface TripAttributes {
     | 'center center'
     | 'center bottom';
   readonly titlePosition: 'top' | 'center' | 'bottom';
+  readonly type: string;
   readonly days: number;
   readonly minSize: number;
   readonly destinationsQty: number;
   readonly departure: Date;
+  readonly bookStart: Date;
+  readonly bookEnd: Date;
   readonly description: object;
   readonly image: { url: string };
   readonly bannerImage: { url: string };
-
   readonly banner: {
     url: string;
     position:
@@ -58,10 +62,12 @@ export interface TripAttributes {
       | 'center bottom';
   };
   readonly bannerOpacity: number;
+  readonly bookFee: number;
   readonly active: boolean;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly paymentPlans: PaymentPlanAttributes[];
 }
 
 type TripModel = Model & TripAttributes;
@@ -133,6 +139,11 @@ const TripAttributes = {
     allowNull: false,
     defaultValue: 'center',
   },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'EXCLUSIVAMENTE TURISMO e LAZER',
+  },
   days: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -146,6 +157,14 @@ const TripAttributes = {
     allowNull: false,
   },
   departure: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  bookStart: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  bookEnd: {
     type: DataTypes.DATEONLY,
     allowNull: false,
   },
@@ -174,6 +193,10 @@ const TripAttributes = {
         opacity: this.bannerOpacity,
       };
     },
+  },
+  bookFee: {
+    type: DataTypes.DECIMAL(10, 4),
+    allowNull: false,
   },
   active: {
     type: DataTypes.BOOLEAN,
@@ -219,6 +242,8 @@ export default class Trip extends Model<TripModel, TripStatic> {
 
   readonly titlePosition: 'top' | 'center' | 'bottom';
 
+  readonly type: string;
+
   readonly days: number;
 
   readonly minSize: number;
@@ -226,6 +251,10 @@ export default class Trip extends Model<TripModel, TripStatic> {
   readonly destinationsQty: number;
 
   readonly departure: Date;
+
+  readonly bookStart: Date;
+
+  readonly bookEnd: Date;
 
   readonly description: object;
 
@@ -247,6 +276,8 @@ export default class Trip extends Model<TripModel, TripStatic> {
       | 'center bottom';
   };
 
+  readonly bookFee: number;
+
   readonly bannerOpacity: number;
 
   readonly active: boolean;
@@ -256,6 +287,14 @@ export default class Trip extends Model<TripModel, TripStatic> {
   readonly createdAt: Date;
 
   readonly updatedAt: Date;
+
+  readonly paymentPlans?: PaymentPlanAttributes[];
+
+  readonly setIncludes: (data: Array<Include>) => Promise<void>;
+
+  readonly setDocuments: (data: Array<Document>) => Promise<void>;
+
+  readonly setItinerary: (data: Array<Itinerary>) => Promise<void>;
 }
 
 export const factory = (sequelize: Sequelize): void =>
@@ -291,6 +330,10 @@ export const associate = (models: {
   Trip.hasMany(models.PaymentPlan, {
     foreignKey: 'tripId',
     as: 'paymentPlans',
+  });
+  Trip.hasMany(models.TransportPlan, {
+    foreignKey: 'tripId',
+    as: 'transportPlans',
   });
   Trip.hasMany(models.Itinerary, {
     foreignKey: 'tripId',

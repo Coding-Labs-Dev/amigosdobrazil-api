@@ -61,6 +61,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'center',
       },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'EXCLUSIVAMENTE TURISMO E LAZER',
+      },
       days: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -77,6 +82,14 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
+      bookStart: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
+      bookEnd: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
       description: {
         type: Sequelize.JSON,
         allowNull: false,
@@ -85,6 +98,10 @@ module.exports = {
         type: Sequelize.DECIMAL(1, 1),
         allowNull: false,
         defaultValue: 0.8,
+      },
+      bookFee: {
+        type: Sequelize.DECIMAL(10, 4),
+        allowNull: false,
       },
       active: {
         type: Sequelize.BOOLEAN,

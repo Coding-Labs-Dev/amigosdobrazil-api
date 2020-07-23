@@ -20,7 +20,7 @@ import {
   FileController,
   SettingController,
   TestimonialController,
-  UploadFileController,
+  // UploadFileController,
   UserController,
   WhyUsController,
   HeroController,
@@ -32,6 +32,9 @@ import {
   DocumentController,
   NextTripController,
   TOSController,
+  PaymentSessionController,
+  PaymentController,
+  TransactionController,
 } from '@controllers/index';
 
 /**
@@ -248,6 +251,10 @@ routes
   );
 
 routes.get('/nexttrips', wrapper(NextTripController.index));
+
+routes.route('/paymentsessions').post(PaymentSessionController.store);
+routes.route('/book/:slug').post(PaymentController.store);
+routes.route('/transaction').post(TransactionController.store);
 
 /**
  *  Admin Only Routes

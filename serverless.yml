@@ -33,26 +33,6 @@ provider:
         - 's3:GetObject'
         - 's3:DeleteObject'
       Resource: 'arn:aws:s3:::${env:S3_BUCKET}/*'
-    - Effect: 'Allow'
-      Action:
-        - 'ses:GetSendQuota'
-        - 'ses:CreateTemplate'
-      Resource: '*'
-    - Effect: 'Allow'
-      Action:
-        - 'sqs:DeleteMessage'
-        - 'sqs:GetQueueUrl'
-        - 'sqs:ChangeMessageVisibility'
-        - 'sqs:SendMessageBatch'
-        - 'sqs:ReceiveMessage'
-        - 'sqs:SendMessage'
-        - 'sqs:GetQueueAttributes'
-        - 'sqs:ListQueueTags'
-        - 'sqs:ListDeadLetterSourceQueues'
-        - 'sqs:DeleteMessageBatch'
-        - 'sqs:ChangeMessageVisibilityBatch'
-        - 'sqs:SetQueueAttributes'
-      Resource: 'arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:${env:SQS_QUEUE_NAME}'
 
 functions:
   app:
@@ -61,13 +41,3 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
-    vpc:
-      securityGroupIds:
-        - ${env:SEC_GROUP}
-      subnetIds:
-        - ${env:SUBNET_1}
-        - ${env:SUBNET_2}
-        - ${env:SUBNET_3}
-        - ${env:SUBNET_4}
-        - ${env:SUBNET_5}
-        - ${env:SUBNET_6}

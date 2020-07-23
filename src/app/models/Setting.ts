@@ -11,6 +11,8 @@ export interface SettingAttributes {
   readonly zip: string;
   readonly mainPhone: string;
   readonly altPhone?: string;
+  readonly maxInstallments: number;
+  readonly maxNoInterestInstallments: number;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -67,6 +69,14 @@ const SettingAttributes = {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  maxInstallments: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  maxNoInterestInstallments: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -96,6 +106,10 @@ export default class Setting extends Model<SettingModel, SettingStatic> {
   readonly mainPhone: string;
 
   readonly altPhone?: string;
+
+  readonly maxInstallments: number;
+
+  readonly maxNoInterestInstallments: number;
 
   readonly deleted: boolean;
 

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import Sequelize from 'sequelize';
 
 import { PaymentPlan } from '@models/index';
 

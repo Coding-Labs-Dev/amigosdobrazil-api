@@ -15,6 +15,8 @@ module.exports = {
           zip: '01503-000',
           mainPhone: '(11) 5573-6999',
           altPhone: '(11) 98111-9180',
+          maxInstallments: 6,
+          maxNoInterestInstallments: 3,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

@@ -105,9 +105,9 @@ export default function Validator(validator: Validator): RequestHandler {
         // .then(() => next())
         // .catch(error => next(validateErrorFormater(error)));
       }
-      next();
+      return next();
     } catch (error) {
-      next(validateErrorFormater(error));
+      return next(validateErrorFormater(error));
     }
   };
   return validate;

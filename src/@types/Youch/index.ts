@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module 'youch' {
   class Youch<Error, Request> {
-    constructor(error: Error, request: Request) {}
+    // constructor(error: Error, request: Request) {}
 
     /**
      * Stores the link `callback` which
