@@ -13,7 +13,7 @@ class NextTripsController {
             attributes: ['url', 'file'],
           },
         ],
-        attributes: ['title', 'date', 'slug', 'background'],
+        attributes: ['title', 'date', 'slug', 'background', 'departure'],
       }),
     );
   }
