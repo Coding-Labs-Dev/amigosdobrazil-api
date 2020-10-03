@@ -1,18 +1,11 @@
 import { Request, Response } from 'express';
+import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
 
 import authConfig from '@config/auth';
 import { User } from '@models/index';
 
 class SessionController {
-  // async index(_req: Request, res: Response): Promise<Response> {
-  //   return res.json(
-  //     await Session.findAll({
-  //       where: { deleted: false },
-  //     }),
-  //   );
-  // }
-
   async store(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body;
 
@@ -22,57 +15,84 @@ class SessionController {
 
     if (!(await user.checkPassword(password))) return res.status(401).send();
 
-    const { id, name } = user;
+    const { id, name, surname } = user;
+
+    const token = jwt.sign({ id }, authConfig.secret, {
+      expiresIn: authConfig.expiresIn,
+    });
+
+    const refreshToken = jwt.sign({ id }, authConfig.secret);
 
     return res.json({
       user: {
         id,
         name,
+        surname,
         email,
       },
-      token: jwt.sign({ id }, authConfig.secret, {
-        expiresIn: authConfig.expiresIn,
-      }),
+      token: {
+        token,
+        refreshToken,
+        type: 'bearer',
+      },
     });
   }
 
-  // async show(req: Request, res: Response): Promise<Response> {
-  //   const { id } = req.params;
-  //   const session = await Session.findOne({
-  //     where: { id, deleted: false },
-  //   });
+  async show(req: Request, res: Response): Promise<Response> {
+    const { auth } = req;
+    if (!auth) return res.status(401).send();
 
-  //   if (!session) return res.status(404).send();
+    const { userId: id } = auth;
 
-  //   return res.json(session);
-  // }
+    const user = await User.findOne({ where: { id } });
 
-  // async update(req: Request, res: Response): Promise<Response> {
-  //   const { body } = req;
-  //   const { id } = req.params;
-  //   const session = await Session.findOne({
-  //     where: { id, deleted: false },
-  //   });
+    if (!user) return res.status(401).send();
 
-  //   if (!session) return res.status(404).send();
+    const { name, surname, email } = user;
 
-  //   await session.update(body);
+    return res.json({
+      user: {
+        id,
+        name,
+        surname,
+        email,
+      },
+    });
+  }
 
-  //   return res.json(session);
-  // }
+  async update(req: Request, res: Response): Promise<Response> {
+    const { refreshToken } = req.body;
 
-  // async delete(req: Request, res: Response): Promise<Response> {
-  //   const { id } = req.params;
-  //   const session = await Session.findOne({
-  //     where: { id, deleted: false },
-  //   });
+    if (!refreshToken)
+      return process.env.NODE_ENV !== 'production'
+        ? res
+            .status(401)
+            .json({ error: { message: 'No Refresh Token provided' } })
+        : res.status(401).send();
 
-  //   if (!session) return res.status(404).send();
+    try {
+      const decoded = (await promisify(jwt.verify)(
+        refreshToken,
+        authConfig.secret,
+      )) as { id: number };
 
-  //   await session.update({ deleted: true });
+      const user = await User.findOne({ where: { id: decoded.id } });
 
-  //   return res.status(200).send();
-  // }
+      if (!user) return res.status(401).send();
+
+      const token = jwt.sign({ id: decoded.id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
+      });
+
+      return res.json({
+        token,
+      });
+    } catch (err) {
+      return process.env.NODE_ENV !== 'production'
+        ? res.status(401).json({ error: { message: err.message } })
+        : res.status(401).send();
+    }
+  }
 }
 
 export default new SessionController();

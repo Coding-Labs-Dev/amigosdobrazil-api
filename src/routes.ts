@@ -93,10 +93,9 @@ routes
 
 routes
   .route('/sessions')
-  .post(
-    ValidatorMiddleware(SessionValidator),
-    wrapper(SessionController.store),
-  );
+  .post(ValidatorMiddleware(SessionValidator), wrapper(SessionController.store))
+  .get(AuthenticationMiddleware, wrapper(SessionController.show))
+  .put(wrapper(SessionController.update));
 
 routes
   .route('/clients')

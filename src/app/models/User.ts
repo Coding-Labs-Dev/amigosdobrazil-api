@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 export interface UserAttributes {
   readonly id: number;
   readonly name: string;
+  readonly surname: string;
   readonly email: string;
   readonly password: string;
   readonly passwordHash: string;
@@ -29,6 +30,10 @@ const UserAttributes = {
     primaryKey: true,
   },
   name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  surname: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -57,6 +62,8 @@ export default class User extends Model<UserModel, UserStatic> {
   readonly id: number;
 
   readonly name: string;
+
+  readonly surname: string;
 
   readonly email: string;
 

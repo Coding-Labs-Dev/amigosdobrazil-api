@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 import authConfig from '@config/auth';
 
-interface Auth {
+export interface Auth {
   id: number;
 }
 
