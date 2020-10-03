@@ -29,20 +29,6 @@ class TripController {
             attributes: ['id', 'file', 'url'],
           },
         ],
-        attributes: [
-          'days',
-          'destinationsQty',
-          'minSize',
-          'departure',
-          'date',
-          'slug',
-          'background',
-          'featured',
-          'banner',
-          'title',
-          'subTitle',
-          'description',
-        ],
       }),
     );
   }
