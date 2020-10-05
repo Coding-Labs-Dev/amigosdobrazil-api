@@ -4,8 +4,6 @@ import S3 from 'aws-sdk/clients/s3';
 
 const s3 = new S3();
 
-console.dir(process.env);
-
 class TransactionController {
   async store(req: Request, res: Response): Promise<Response> {
     const { body: fileData } = req;

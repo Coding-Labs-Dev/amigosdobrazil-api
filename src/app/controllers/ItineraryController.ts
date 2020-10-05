@@ -1,14 +1,24 @@
 import { Request, Response } from 'express';
 
-import { Itinerary } from '@models/index';
+import { Itinerary, Trip } from '@models/index';
 
 class ItineraryController {
-  async index(_req: Request, res: Response): Promise<Response> {
-    return res.json(
-      await Itinerary.findAll({
-        where: { deleted: false },
-      }),
-    );
+  async index(req: Request, res: Response): Promise<Response> {
+    const { tripId } = req.params;
+    const trip = await Trip.findOne({
+      where: { id: tripId, deleted: false },
+      include: [
+        {
+          model: Itinerary,
+          as: 'itinerary',
+        },
+      ],
+      order: [[{ model: Itinerary, as: 'itinerary' }, 'order', 'ASC']],
+    });
+
+    if (!trip) return res.status(404).send();
+
+    return res.json(trip.itinerary);
   }
 
   async store(req: Request, res: Response): Promise<Response> {

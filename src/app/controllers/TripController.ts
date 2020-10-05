@@ -1,6 +1,8 @@
+/* eslint-disable no-restricted-globals */
 import { Request, Response } from 'express';
 import { getActivePlanIndex } from '@utils/ActivePlan';
 import { getCanBook } from '@utils/CanBook';
+import getAttachedIds from '@utils/GetAttachedIds';
 
 import {
   Trip,
@@ -10,7 +12,10 @@ import {
   Document,
   PaymentPlan,
 } from '@models/index';
-import TransportPlan from '@models/TransportPlan';
+import TransportPlan, { TransportPlanAttributes } from '@models/TransportPlan';
+import { ItineraryAttributes } from '@models/Itinerary';
+import { IncludeAttributes } from '@models/Include';
+import { PaymentPlanAttributes } from '@models/PaymentPlan';
 
 class TripController {
   async index(_req: Request, res: Response): Promise<Response> {
@@ -113,19 +118,146 @@ class TripController {
     const { id } = req.params;
     const trip = await Trip.findOne({
       where: { id, deleted: false },
+      include: [
+        {
+          model: File,
+          as: 'image',
+          attributes: ['id', 'file', 'url'],
+        },
+        {
+          model: File,
+          as: 'bannerImage',
+          attributes: ['id', 'file', 'url'],
+        },
+        {
+          model: Itinerary,
+          as: 'itinerary',
+        },
+        {
+          model: Include,
+          as: 'includes',
+          attributes: ['description'],
+        },
+        {
+          model: Document,
+          as: 'documents',
+          attributes: ['description'],
+        },
+        {
+          model: PaymentPlan,
+          as: 'paymentPlans',
+        },
+        {
+          model: TransportPlan,
+          as: 'transportPlans',
+        },
+      ],
     });
 
     if (!trip) return res.status(404).send();
 
-    await trip.update(body);
+    const tripData = {
+      ...body,
+      transportPlan: undefined,
+      itinerary: undefined,
+      includes: undefined,
+      paymentPlans: undefined,
+    };
 
-    const { includes = [], documents = [], itinerary = [] } = body;
+    await trip.update(tripData);
 
-    await trip.setIncludes(includes);
-    await trip.setDocuments(documents);
-    await trip.setItinerary(itinerary);
+    const {
+      transportPlan,
+      itinerary = [],
+      includes = [],
+      paymentPlans = [],
+    } = body;
 
-    return res.json(trip);
+    if (transportPlan) {
+      const data = {
+        ...transportPlan,
+        installmentsQty: Number(transportPlan.installmentsQty),
+      };
+      const [instance, isNew] = await TransportPlan.findOrCreate({
+        where: { tripId: id },
+        defaults: data,
+      });
+      if (!isNew) await instance.update(data);
+    }
+
+    const itineraryInstances: Array<Itinerary> = await Promise.all(
+      itinerary.map(async (item: ItineraryAttributes) => {
+        const instanceId = item.id && !isNaN(Number(item.id)) ? item.id : null;
+        const [instance, isNew] = await Itinerary.findOrCreate({
+          where: { id: instanceId, tripId: id },
+          defaults: { ...item, id: instanceId, tripId: id },
+        });
+        if (!isNew) return instance.update(item);
+        return instance;
+      }),
+    );
+
+    const paymentPlansInstances: Array<PaymentPlan> = await Promise.all(
+      paymentPlans.map(async (item: PaymentPlanAttributes) => {
+        const instanceId = item.id && !isNaN(Number(item.id)) ? item.id : null;
+        const [instance, isNew] = await PaymentPlan.findOrCreate({
+          where: { id: instanceId, tripId: id },
+          defaults: { ...item, id: instanceId, tripId: id },
+        });
+        if (!isNew) return instance.update(item);
+        return instance;
+      }),
+    );
+
+    const includesInstances: Array<Include> = await Promise.all(
+      includes.map(async (item: IncludeAttributes) => {
+        const instanceId = item.id && !isNaN(Number(item.id)) ? item.id : null;
+        const [instance, isNew] = await Include.findOrCreate({
+          where: { id: instanceId, tripId: id },
+          defaults: { ...item, id: instanceId, tripId: id },
+        });
+        if (!isNew) return instance.update(item);
+        return instance;
+      }),
+    );
+
+    const newItinerariesIds = itineraryInstances.map(
+      item => (item.toJSON() as ItineraryAttributes).id,
+    );
+
+    const newPaymentPlansIds = paymentPlansInstances.map(
+      item => (item.toJSON() as PaymentPlanAttributes).id,
+    );
+
+    const newIncludesIds = includesInstances.map(
+      item => (item.toJSON() as IncludeAttributes).id,
+    );
+
+    const itinerariesId = getAttachedIds(
+      newItinerariesIds,
+      trip.itinerary.map(({ id: itineraryId }) => itineraryId),
+    );
+
+    const paymentPlansId = getAttachedIds(
+      newPaymentPlansIds,
+      trip.paymentPlans?.map(({ id: paymentPlanId }) => paymentPlanId) || [],
+    );
+
+    const includesId = getAttachedIds(
+      newIncludesIds,
+      trip.includes?.map(({ id: includeId }) => includeId) || [],
+    );
+
+    if (itinerariesId.removedIds)
+      await Itinerary.destroy({ where: { id: itinerariesId.removedIds } });
+
+    if (paymentPlansId.removedIds)
+      await PaymentPlan.destroy({ where: { id: paymentPlansId.removedIds } });
+
+    if (includesId.removedIds)
+      await Include.destroy({ where: { id: includesId.removedIds } });
+
+    return res.json({ trip });
   }
 
   async delete(req: Request, res: Response): Promise<Response> {

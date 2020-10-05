@@ -4,16 +4,15 @@ import S3 from 'aws-sdk/clients/s3';
 
 const s3 = new S3({ region: 'us-east-1' });
 
-export async function getFile(fileKey: string): Promise<Buffer | null> {
+export async function getFile(
+  fileKey: string,
+): Promise<Buffer | string | null> {
   if (process.env.STORAGE === 's3') {
-    const file = await s3
-      .getObject({
-        Bucket: process.env.S3_BUCKET,
-        Key: fileKey,
-      })
-      .promise();
-    if (!file.Body) return null;
-    return Buffer.from(file.Body);
+    const signedUrl = s3.getSignedUrl('getObject', {
+      Bucket: process.env.S3_BUCKET,
+      Key: fileKey,
+    });
+    return signedUrl;
   }
 
   const file = fs.readFileSync(path.resolve(process.cwd(), 'tmp', fileKey));

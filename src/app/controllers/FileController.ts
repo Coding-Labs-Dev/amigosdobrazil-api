@@ -30,7 +30,7 @@ class FileController {
     return res.json(file);
   }
 
-  async show(req: Request, res: Response): Promise<Response> {
+  async show(req: Request, res: Response): Promise<Response | void> {
     const { id } = req.params;
 
     const file = await File.findOne({ where: { file: id } });
@@ -40,6 +40,8 @@ class FileController {
     const fileData = await getFile(id);
 
     if (!fileData) return res.status(404).send();
+
+    if (typeof fileData === 'string') return res.redirect(fileData);
 
     res.set('Content-Type', `${file.type}/${file.subType}`);
     return res.send(fileData);

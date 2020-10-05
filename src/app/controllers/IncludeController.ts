@@ -1,14 +1,23 @@
 import { Request, Response } from 'express';
 
-import { Include } from '@models/index';
+import { Include, Trip } from '@models/index';
 
 class IncludeController {
-  async index(_req: Request, res: Response): Promise<Response> {
-    return res.json(
-      await Include.findAll({
-        where: { deleted: false },
-      }),
-    );
+  async index(req: Request, res: Response): Promise<Response> {
+    const { tripId } = req.params;
+    const trip = await Trip.findOne({
+      where: { id: tripId, deleted: false },
+      include: [
+        {
+          model: Include,
+          as: 'includes',
+        },
+      ],
+    });
+
+    if (!trip) return res.status(404).send();
+
+    return res.json(trip.includes);
   }
 
   async store(req: Request, res: Response): Promise<Response> {

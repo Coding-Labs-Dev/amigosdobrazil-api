@@ -8,6 +8,7 @@ import {
 
 export interface IncludeAttributes {
   readonly id: number;
+  readonly tripId: number;
   readonly description: string;
   readonly deleted: boolean;
   readonly createdAt: Date;
@@ -29,6 +30,12 @@ const IncludeAttributes = {
     autoIncrement: true,
     primaryKey: true,
   },
+  tripId: {
+    type: DataTypes.INTEGER,
+    references: { model: 'Trips', key: 'id' },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  },
   description: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -46,6 +53,8 @@ const IncludeAttributes = {
 export default class Include extends Model<IncludeModel, IncludeStatic> {
   readonly id: number;
 
+  readonly tripId: number;
+
   readonly description: string;
 
   readonly deleted: boolean;
@@ -61,10 +70,8 @@ export const factory = (sequelize: Sequelize): void =>
 export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
-  Include.belongsToMany(models.Trip, {
-    through: 'TripInclude',
-    foreignKey: 'includeId',
-    timestamps: false,
-    as: 'trips',
+  Include.belongsTo(models.Trip, {
+    foreignKey: 'tripId',
+    as: 'trip',
   });
 };

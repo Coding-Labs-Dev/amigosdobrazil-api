@@ -20,6 +20,7 @@
     "seeds:copy": "./scripts/copy_seeds.sh",
     "database:reset": "yarn sequelize db:migrate:undo:all && yarn migrations:run && yarn sequelize db:seed:all",
     "docker:db:migrate": "docker-compose exec server.test bash ./scripts/migrate.sh",
+    "docker:db:migrate:undo": "docker-compose exec server.test yarn sequelize db:migrate:undo",
     "docker:db:seed": "docker-compose exec server.test yarn sequelize db:seed:all",
     "docker:db:reset": "docker-compose exec server.test yarn sequelize db:migrate:undo:all && docker-compose exec server.test bash ./scripts/migrate.sh && docker-compose exec server.test yarn sequelize db:seed:all"
   },

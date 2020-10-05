@@ -9,7 +9,7 @@ import {
 import slugify from 'slugify';
 import moment from 'moment';
 import { PaymentPlanAttributes } from './PaymentPlan';
-import { Include, Document, Itinerary } from '.';
+import { Include, Document, Itinerary, TransportPlan } from '.';
 
 slugify.extend({
   '&': 'e',
@@ -290,11 +290,17 @@ export default class Trip extends Model<TripModel, TripStatic> {
 
   readonly paymentPlans?: PaymentPlanAttributes[];
 
-  readonly setIncludes: (data: Array<Include>) => Promise<void>;
+  readonly setIncludes: (data: Array<number>) => Promise<void>;
 
-  readonly setDocuments: (data: Array<Document>) => Promise<void>;
+  readonly setDocuments: (data: Array<number>) => Promise<void>;
 
-  readonly setItinerary: (data: Array<Itinerary>) => Promise<void>;
+  readonly setItinerary: (data: Array<number>) => Promise<void>;
+
+  readonly itinerary: Array<Itinerary>;
+
+  readonly includes: Array<Include>;
+
+  readonly transportPlans: Array<TransportPlan>;
 }
 
 export const factory = (sequelize: Sequelize): void =>
@@ -339,10 +345,8 @@ export const associate = (models: {
     foreignKey: 'tripId',
     as: 'itinerary',
   });
-  Trip.belongsToMany(models.Include, {
-    through: 'TripInclude',
+  Trip.hasMany(models.Include, {
     foreignKey: 'tripId',
-    timestamps: false,
     as: 'includes',
   });
   Trip.belongsToMany(models.Document, {

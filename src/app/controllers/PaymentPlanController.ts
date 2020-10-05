@@ -1,14 +1,23 @@
 import { Request, Response } from 'express';
 
-import { PaymentPlan } from '@models/index';
+import { PaymentPlan, Trip } from '@models/index';
 
 class PaymentPlanController {
-  async index(_req: Request, res: Response): Promise<Response> {
-    return res.json(
-      await PaymentPlan.findAll({
-        where: { deleted: false },
-      }),
-    );
+  async index(req: Request, res: Response): Promise<Response> {
+    const { tripId } = req.params;
+    const trip = await Trip.findOne({
+      where: { id: tripId, deleted: false },
+      include: [
+        {
+          model: PaymentPlan,
+          as: 'paymentPlans',
+        },
+      ],
+    });
+
+    if (!trip) return res.status(404).send();
+
+    return res.json(trip.paymentPlans);
   }
 
   async store(req: Request, res: Response): Promise<Response> {
