@@ -107,12 +107,12 @@ const TripAttributes = {
   backgroundId: {
     type: DataTypes.INTEGER,
     references: { model: 'Files', key: 'id' },
-    allowNull: false,
+    allowNull: true,
   },
   bannerId: {
     type: DataTypes.INTEGER,
     references: { model: 'Files', key: 'id' },
-    allowNull: false,
+    allowNull: true,
   },
   bannerPosition: {
     type: DataTypes.ENUM(
@@ -131,7 +131,7 @@ const TripAttributes = {
   },
   bannerOpacity: {
     type: DataTypes.DECIMAL(1, 1),
-    allowNull: false,
+    allowNull: true,
     default: 0.8,
   },
   titlePosition: {

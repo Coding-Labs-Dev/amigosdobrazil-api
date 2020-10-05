@@ -12,10 +12,11 @@ import {
   Document,
   PaymentPlan,
 } from '@models/index';
-import TransportPlan, { TransportPlanAttributes } from '@models/TransportPlan';
+import TransportPlan from '@models/TransportPlan';
 import { ItineraryAttributes } from '@models/Itinerary';
 import { IncludeAttributes } from '@models/Include';
 import { PaymentPlanAttributes } from '@models/PaymentPlan';
+import { removeFile } from '@utils/File';
 
 class TripController {
   async index(_req: Request, res: Response): Promise<Response> {
@@ -163,6 +164,17 @@ class TripController {
       includes: undefined,
       paymentPlans: undefined,
     };
+
+    if (
+      typeof tripData.backgroundId !== 'undefined' &&
+      tripData.backgroundId !== trip.backgroundId
+    )
+      await removeFile(trip.backgroundId);
+    if (
+      typeof tripData.bannerId !== 'undefined' &&
+      tripData.bannerId !== trip.bannerId
+    )
+      await removeFile(trip.bannerId);
 
     await trip.update(tripData);
 

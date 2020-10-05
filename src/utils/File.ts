@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import S3 from 'aws-sdk/clients/s3';
+import File from '@models/File';
 
 const s3 = new S3({ region: 'us-east-1' });
 
@@ -31,4 +32,13 @@ export async function deleteFile(fileKey: string): Promise<void> {
   } else {
     fs.unlinkSync(path.resolve(process.cwd(), 'tmp', fileKey));
   }
+}
+
+export async function removeFile(id: number): Promise<void> {
+  const file = await File.findOne({
+    where: { id, deleted: false },
+  });
+  if (!file) return;
+  await deleteFile(file.file);
+  await file.update({ deleted: true });
 }

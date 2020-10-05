@@ -4,10 +4,10 @@ export default {
   store: {
     params: yup.object().shape({}),
     body: yup.object().shape({
-      featured: yup.boolean().required(),
+      featured: yup.boolean(),
       title: yup.string().required(),
       subTitle: yup.string().required(),
-      backgroundId: yup.number().required(),
+      backgroundId: yup.number(),
       backgroundPosition: yup
         .string()
         .oneOf([
@@ -20,12 +20,8 @@ export default {
           'center top',
           'center center',
           'center bottom',
-        ])
-        .required(),
-      titlePosition: yup
-        .string()
-        .oneOf(['top', 'center', 'bottom'])
-        .required(),
+        ]),
+      titlePosition: yup.string().oneOf(['top', 'center', 'bottom']),
       days: yup.number().required(),
       minSize: yup.number().required(),
       destinationsQty: yup.number().required(),
