@@ -13,7 +13,7 @@ services:
       - ./.database:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  server.test:
+  server:
     build: .
     environment:
       - NODE_ENV=local
@@ -33,7 +33,14 @@ services:
       - 3000:3000
       - 9229:9229
     volumes:
-      - ../amigosdobrazil-nextjs/src:/usr/src/app/src
-      - ../amigosdobrazil-nextjs/public:/usr/src/app/public
+      - ../amigosdobrazil-nextjs:/usr/src/app
+      - /usr/src/app/node_modules/
     depends_on:
-      - server.test
+      - server
+  admin:
+    build: ../amigosdobrazil-admin
+    ports:
+      - 8080:8080
+    volumes:
+      - ../amigosdobrazil-admin:/usr/src/app
+      - /usr/src/app/node_modules/
