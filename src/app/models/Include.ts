@@ -10,6 +10,7 @@ export interface IncludeAttributes {
   readonly id: number;
   readonly tripId: number;
   readonly description: string;
+  readonly included: boolean;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -41,6 +42,11 @@ const IncludeAttributes = {
     allowNull: false,
     unique: true,
   },
+  included: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -56,6 +62,8 @@ export default class Include extends Model<IncludeModel, IncludeStatic> {
   readonly tripId: number;
 
   readonly description: string;
+
+  readonly included: boolean;
 
   readonly deleted: boolean;
 

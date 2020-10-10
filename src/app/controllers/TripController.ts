@@ -80,7 +80,7 @@ class TripController {
         {
           model: Include,
           as: 'includes',
-          attributes: ['description'],
+          attributes: ['description', 'included'],
         },
         {
           model: Document,
