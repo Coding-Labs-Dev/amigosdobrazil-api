@@ -12,22 +12,30 @@ class FileController {
   }
 
   async store(req: Request, res: Response): Promise<Response> {
-    const { file: fileData } = req;
+    const { files } = req;
     const { auth } = req;
 
-    const { originalname, mimetype, filename, key } = fileData;
+    if (!Array.isArray(files)) return res.status(422).send();
 
-    const [type, subType] = mimetype.split('/');
+    const result = await Promise.all(
+      files.map(async fileData => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        const { originalname, mimetype, filename, key } = fileData;
 
-    const file = await File.create({
-      file: key || filename,
-      originalName: originalname,
-      type,
-      subType,
-      userId: auth?.userId,
-    });
+        const [type, subType] = mimetype.split('/');
 
-    return res.json(file);
+        return File.create({
+          file: key || filename,
+          originalName: originalname,
+          type,
+          subType,
+          userId: auth?.userId,
+        });
+      }),
+    );
+
+    return res.json(result);
   }
 
   async show(req: Request, res: Response): Promise<Response | void> {

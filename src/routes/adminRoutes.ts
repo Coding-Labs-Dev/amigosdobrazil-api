@@ -74,7 +74,7 @@ routes
   .route('/files')
   .get(ValidatorMiddleware(FileValidator), wrapper(FileController.index))
   .post(
-    UploadFileMiddleware.single('file'),
+    UploadFileMiddleware.array('files'),
     ValidatorMiddleware(FileValidator),
     wrapper(FileController.store),
   );
