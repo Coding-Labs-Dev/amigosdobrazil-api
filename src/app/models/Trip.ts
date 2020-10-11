@@ -9,7 +9,7 @@ import {
 import slugify from 'slugify';
 import moment from 'moment';
 import { PaymentPlanAttributes } from './PaymentPlan';
-import { Include, Document, Itinerary, TransportPlan } from '.';
+import { Include, Itinerary, TransportPlan } from '.';
 
 slugify.extend({
   '&': 'e',

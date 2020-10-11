@@ -29,6 +29,7 @@ import {
  */
 
 import { FormContactValidator, FileValidator } from '@validators/index';
+import GalleryController from '@controllers/GalleryController';
 
 const routes = Router();
 
@@ -61,5 +62,8 @@ routes.post('/paymentsessions', PaymentSessionController.store);
 routes.post('/book/:slug', PaymentController.store);
 
 routes.get('/tos', TOSController.show);
+
+routes.get('/galleries', GalleryController.index);
+routes.get('/galleries/:slug', GalleryController.show);
 
 export default routes;

@@ -59,6 +59,16 @@ import {
   associate as DocumentAssociate,
 } from '@models/Document';
 
+import {
+  factory as GalleryFactory,
+  associate as GalleryAssociate,
+} from '@models/Gallery';
+
+import {
+  factory as PhotoFactory,
+  associate as PhotoAssociate,
+} from '@models/Photo';
+
 const models = [
   FileFactory,
   FormContactFactory,
@@ -74,6 +84,8 @@ const models = [
   ItineraryFactory,
   IncludeFactory,
   DocumentFactory,
+  GalleryFactory,
+  PhotoFactory,
 ];
 
 const associates = [
@@ -86,6 +98,8 @@ const associates = [
   ItineraryAssociate,
   IncludeAssociate,
   DocumentAssociate,
+  GalleryAssociate,
+  PhotoAssociate,
 ];
 
 class Database {

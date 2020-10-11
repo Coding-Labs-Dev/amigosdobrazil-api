@@ -5,7 +5,7 @@ export default {
     params: yup.object().shape({}),
     body: yup.object().shape({}),
     req: yup.object().shape({
-      file: yup.object().required(),
+      files: yup.array().required(),
     }),
   },
   update: {

@@ -27,16 +27,14 @@ import {
   WhyUsController,
   HeroController,
   SessionController,
-  TripController,
   PaymentPlanController,
   ItineraryController,
   IncludeController,
   DocumentController,
-  NextTripController,
-  PaymentSessionController,
-  PaymentController,
-  TransactionController,
 } from '@controllers/index';
+
+import TripController from '@controllers/internal/TripController';
+import GalleryController from '@controllers/internal/GalleryController';
 
 /**
  * Validators
@@ -220,12 +218,6 @@ routes
   .route('/trips/:tripId/transportplans')
   .get(wrapper(TransportPlanController.index));
 
-routes.get('/nexttrips', wrapper(NextTripController.index));
-
-routes.route('/paymentsessions').post(wrapper(PaymentSessionController.store));
-routes.route('/book/:slug').post(wrapper(PaymentController.store));
-routes.route('/transaction').post(wrapper(TransactionController.store));
-
 routes.use('/documents', ValidatorMiddleware(DocumentValidator));
 routes
   .route('/documents')
@@ -235,6 +227,17 @@ routes
   .route('/documents/:id')
   .put(wrapper(DocumentController.update))
   .get(wrapper(DocumentController.show))
-  .delete(DocumentController.delete);
+  .delete(wrapper(DocumentController.delete));
+
+routes
+  .route('/galleries')
+  .get(wrapper(GalleryController.index))
+  .post(wrapper(GalleryController.store));
+
+routes
+  .route('/galleries/:id')
+  .put(wrapper(GalleryController.update))
+  .get(wrapper(GalleryController.show))
+  .delete(wrapper(GalleryController.delete));
 
 export default routes;

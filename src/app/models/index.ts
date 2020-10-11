@@ -12,3 +12,5 @@ export { default as TransportPlan } from './TransportPlan';
 export { default as Itinerary } from './Itinerary';
 export { default as Include } from './Include';
 export { default as Document } from './Document';
+export { default as Gallery } from './Gallery';
+export { default as Photo } from './Photo';
