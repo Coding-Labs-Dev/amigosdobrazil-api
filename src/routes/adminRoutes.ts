@@ -100,7 +100,6 @@ routes
 
 routes
   .route('/settings')
-  .post(ValidatorMiddleware(SettingValidator), wrapper(SettingController.store))
   .get(wrapper(SettingController.show))
   .put(
     ValidatorMiddleware(SettingValidator),

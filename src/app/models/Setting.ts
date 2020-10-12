@@ -13,6 +13,10 @@ export interface SettingAttributes {
   readonly altPhone?: string;
   readonly maxInstallments: number;
   readonly maxNoInterestInstallments: number;
+  readonly pagSeguroToken: string;
+  readonly pagSeguroEmail: string;
+  readonly instagram: string;
+  readonly facebook: string;
   readonly deleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -77,6 +81,18 @@ const SettingAttributes = {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  pagSeguroToken: {
+    type: DataTypes.STRING,
+  },
+  pagSeguroEmail: {
+    type: DataTypes.STRING,
+  },
+  instagram: {
+    type: DataTypes.STRING,
+  },
+  facebook: {
+    type: DataTypes.STRING,
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -110,6 +126,14 @@ export default class Setting extends Model<SettingModel, SettingStatic> {
   readonly maxInstallments: number;
 
   readonly maxNoInterestInstallments: number;
+
+  readonly pagSeguroToken: string;
+
+  readonly pagSeguroEmail: string;
+
+  readonly instagram: string;
+
+  readonly facebook: string;
 
   readonly deleted: boolean;
 

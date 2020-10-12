@@ -3,14 +3,6 @@ import { Request, Response } from 'express';
 import { Setting } from '@models/index';
 
 class SettingController {
-  async store(req: Request, res: Response): Promise<Response> {
-    const { body } = req;
-
-    const setting = await Setting.create(body);
-
-    return res.json(setting);
-  }
-
   async show(_req: Request, res: Response): Promise<Response> {
     return res.json(await Setting.findByPk(1));
   }
@@ -21,7 +13,17 @@ class SettingController {
 
     if (!setting) return res.status(404).send();
 
-    await setting.update(body);
+    const { name, address, contact, pagSeguro, socialMedia } = body;
+
+    const settingsData = {
+      name,
+      ...address,
+      ...contact,
+      ...pagSeguro,
+      ...socialMedia,
+    };
+
+    await setting.update(settingsData);
 
     return res.json(setting);
   }
