@@ -34,6 +34,12 @@ const DocumentAttributes = {
     allowNull: false,
     unique: true,
   },
+  tripId: {
+    type: DataTypes.INTEGER,
+    references: { model: 'Trips', key: 'id' },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -61,10 +67,8 @@ export const factory = (sequelize: Sequelize): void =>
 export const associate = (models: {
   [key: string]: ModelCtor<Model>;
 }): void => {
-  Document.belongsToMany(models.Trip, {
-    through: 'TripDocument',
-    foreignKey: 'documentId',
-    timestamps: false,
+  Document.belongsTo(models.Trip, {
+    foreignKey: 'tripId',
     as: 'trips',
   });
 };

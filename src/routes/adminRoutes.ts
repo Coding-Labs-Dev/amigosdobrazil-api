@@ -6,57 +6,49 @@ import wrapper from '@utils/Wrapper';
  * Middlewares
  */
 
-import {
-  UploadFileMiddleware,
-  ValidatorMiddleware,
-  AuthenticationMiddleware,
-} from '@middlewares/index';
+import UploadFileMiddleware from '@middlewares/UploadFileMiddleware';
+import ValidatorMiddleware from '@middlewares/ValidatorMiddleware';
+import AuthenticationMiddleware from '@middlewares/AuthenticationMiddleware';
 
 /**
  * Controllers
  */
 
-import {
-  ClientController,
-  FormContactController,
-  FileController,
-  SettingController,
-  TestimonialController,
-  // UploadFileController,
-  UserController,
-  WhyUsController,
-  HeroController,
-  SessionController,
-  PaymentPlanController,
-  ItineraryController,
-  IncludeController,
-  DocumentController,
-} from '@controllers/index';
-
-import TripController from '@controllers/internal/TripController';
+import ClientController from '@controllers/internal/ClientController';
+import DocumentControllers from '@controllers/internal/DocumentController';
+import FileController from '@controllers/internal/FileController';
+import FormContactController from '@controllers/internal/FormContactController';
 import GalleryController from '@controllers/internal/GalleryController';
+import HeroController from '@controllers/internal/HeroController';
+import IncludeController from '@controllers/internal/IncludeController';
+import ItineraryController from '@controllers/internal/ItineraryController';
+import PaymentPlanController from '@controllers/internal/PaymentPlanController';
+import SessionController from '@controllers/internal/SessionController';
+import SettingController from '@controllers/internal/SettingController';
+import TestimonialController from '@controllers/internal/TestimonialController';
+import TransportPlanController from '@controllers/internal/TransportPlanController';
+import TripController from '@controllers/internal/TripController';
+import UserController from '@controllers/internal/UserController';
+import WhyUsController from '@controllers/internal/WhyUsController';
 
 /**
  * Validators
  */
 
-import {
-  ClientValidator,
-  FormContactValidator,
-  HeroValidator,
-  SettingValidator,
-  TestimonialValidator,
-  WhyUsValidator,
-  UserValidator,
-  FileValidator,
-  SessionValidator,
-  TripValidator,
-  PaymentPlanValidator,
-  ItineraryValidator,
-  IncludeValidator,
-  DocumentValidator,
-} from '@validators/index';
-import TransportPlanController from '@controllers/TransportPlanController';
+import ClientValidator from '@validators/ClientValidator';
+import FormContactValidator from '@validators/FormContactValidator';
+import HeroValidator from '@validators/HeroValidator';
+import SettingValidator from '@validators/SettingValidator';
+import TestimonialValidator from '@validators/TestimonialValidator';
+import WhyUsValidator from '@validators/WhyUsValidator';
+import UserValidator from '@validators/UserValidator';
+import FileValidator from '@validators/FileValidator';
+import SessionValidator from '@validators/SessionValidator';
+import TripValidator from '@validators/TripValidator';
+import PaymentPlanValidator from '@validators/PaymentPlanValidator';
+import ItineraryValidator from '@validators/ItineraryValidator';
+import IncludeValidator from '@validators/IncludeValidator';
+import DocumentValidator from '@validators/DocumentValidator';
 
 const routes = Router();
 
@@ -218,16 +210,10 @@ routes
   .route('/trips/:tripId/transportplans')
   .get(wrapper(TransportPlanController.index));
 
-routes.use('/documents', ValidatorMiddleware(DocumentValidator));
+routes.use('/trips/:tripId/documents', ValidatorMiddleware(DocumentValidator));
 routes
-  .route('/documents')
-  .get(wrapper(DocumentController.index))
-  .post(wrapper(DocumentController.store));
-routes
-  .route('/documents/:id')
-  .put(wrapper(DocumentController.update))
-  .get(wrapper(DocumentController.show))
-  .delete(wrapper(DocumentController.delete));
+  .route('/trips/:tripId/documents')
+  .get(wrapper(DocumentControllers.index));
 
 routes
   .route('/galleries')

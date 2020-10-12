@@ -17,6 +17,7 @@ import { ItineraryAttributes } from '@models/Itinerary';
 import { IncludeAttributes } from '@models/Include';
 import { PaymentPlanAttributes } from '@models/PaymentPlan';
 import { removeFile } from '@utils/File';
+import { DocumentAttributes } from '@models/Document';
 
 class TripController {
   async index(_req: Request, res: Response): Promise<Response> {
@@ -123,12 +124,10 @@ class TripController {
         {
           model: File,
           as: 'image',
-          attributes: ['id', 'file', 'url'],
         },
         {
           model: File,
           as: 'bannerImage',
-          attributes: ['id', 'file', 'url'],
         },
         {
           model: Itinerary,
@@ -137,12 +136,10 @@ class TripController {
         {
           model: Include,
           as: 'includes',
-          attributes: ['description'],
         },
         {
           model: Document,
           as: 'documents',
-          attributes: ['description'],
         },
         {
           model: PaymentPlan,
@@ -163,6 +160,7 @@ class TripController {
       itinerary: undefined,
       includes: undefined,
       paymentPlans: undefined,
+      documents: undefined,
     };
 
     if (
@@ -183,6 +181,7 @@ class TripController {
       itinerary = [],
       includes = [],
       paymentPlans = [],
+      documents = [],
     } = body;
 
     if (transportPlan) {
@@ -233,6 +232,18 @@ class TripController {
       }),
     );
 
+    const documentsInstances: Array<Document> = await Promise.all(
+      documents.map(async (item: DocumentAttributes) => {
+        const instanceId = item.id && !isNaN(Number(item.id)) ? item.id : null;
+        const [instance, isNew] = await Document.findOrCreate({
+          where: { id: instanceId, tripId: id },
+          defaults: { ...item, id: instanceId, tripId: id },
+        });
+        if (!isNew) return instance.update(item);
+        return instance;
+      }),
+    );
+
     const newItinerariesIds = itineraryInstances.map(
       item => (item.toJSON() as ItineraryAttributes).id,
     );
@@ -243,6 +254,10 @@ class TripController {
 
     const newIncludesIds = includesInstances.map(
       item => (item.toJSON() as IncludeAttributes).id,
+    );
+
+    const newDocumentsIds = documentsInstances.map(
+      item => (item.toJSON() as DocumentAttributes).id,
     );
 
     const itinerariesId = getAttachedIds(
@@ -260,6 +275,11 @@ class TripController {
       trip.includes?.map(({ id: includeId }) => includeId) || [],
     );
 
+    const documentsIds = getAttachedIds(
+      newDocumentsIds,
+      trip.documents?.map(({ id: documentId }) => documentId) || [],
+    );
+
     if (itinerariesId.removedIds)
       await Itinerary.destroy({ where: { id: itinerariesId.removedIds } });
 
@@ -268,6 +288,9 @@ class TripController {
 
     if (includesId.removedIds)
       await Include.destroy({ where: { id: includesId.removedIds } });
+
+    if (documentsIds.removedIds)
+      await Document.destroy({ where: { id: documentsIds.removedIds } });
 
     return res.json({ trip });
   }

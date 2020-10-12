@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
-import { Document } from '@models/index';
+import { Hero } from '@models/index';
 
-class DocumentController {
+class HeroController {
   async index(_req: Request, res: Response): Promise<Response> {
     return res.json(
-      await Document.findAll({
+      await Hero.findAll({
         where: { deleted: false },
       }),
     );
@@ -14,48 +14,48 @@ class DocumentController {
   async store(req: Request, res: Response): Promise<Response> {
     const { body } = req;
 
-    const document = await Document.create(body);
+    const hero = await Hero.create(body);
 
-    return res.json(document);
+    return res.json(hero);
   }
 
   async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const document = await Document.findOne({
+    const hero = await Hero.findOne({
       where: { id, deleted: false },
     });
 
-    if (!document) return res.status(404).send();
+    if (!hero) return res.status(404).send();
 
-    return res.json(document);
+    return res.json(hero);
   }
 
   async update(req: Request, res: Response): Promise<Response> {
     const { body } = req;
     const { id } = req.params;
-    const document = await Document.findOne({
+    const hero = await Hero.findOne({
       where: { id, deleted: false },
     });
 
-    if (!document) return res.status(404).send();
+    if (!hero) return res.status(404).send();
 
-    await document.update(body);
+    await hero.update(body);
 
-    return res.json(document);
+    return res.json(hero);
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const document = await Document.findOne({
+    const hero = await Hero.findOne({
       where: { id, deleted: false },
     });
 
-    if (!document) return res.status(404).send();
+    if (!hero) return res.status(404).send();
 
-    await document.update({ deleted: true });
+    await hero.update({ deleted: true });
 
     return res.status(200).send();
   }
 }
 
-export default new DocumentController();
+export default new HeroController();
