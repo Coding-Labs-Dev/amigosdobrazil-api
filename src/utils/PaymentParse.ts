@@ -72,9 +72,9 @@ export const parseCheckoutForm = (
             document: {
               type: 'CPF',
               value: data.cpf.replace(/\D/g, ''),
-              birthDate: data.dob,
             },
           },
+          birthDate: data.dob,
           phone: {
             areaCode: data.mobile.replace(/\D/g, '').slice(0, 2),
             number: data.mobile.replace(/\D/g, '').slice(2),

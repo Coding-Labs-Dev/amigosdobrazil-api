@@ -91,9 +91,9 @@ export type CreditCardCheckout = DefaultCheckoutBody & {
           document: {
             type: 'CPF' | 'CNPJ';
             value: string;
-            birthDate: string;
           };
         };
+        birthDate: string;
         phone: {
           areaCode: string;
           number: string;
