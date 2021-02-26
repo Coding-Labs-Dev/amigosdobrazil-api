@@ -63,7 +63,9 @@ export const parseCheckoutForm = (
         token: data.creditCardToken.card.token,
         installment: {
           quantity: data.installments.installment.quantity,
-          value: String(data.installments.installment.installmentAmount),
+          value: Number(
+            String(data.installments.installment.installmentAmount),
+          ).toFixed(2),
           noInterestInstallmentQuantity: 3,
         },
         holder: {
@@ -85,7 +87,7 @@ export const parseCheckoutForm = (
           number: data.address.residential.number,
           district: data.address.residential.district,
           city: data.address.residential.city,
-          state: data.address.residential.district,
+          state: String(data.address.residential.district).toUpperCase(),
           country: 'BR',
           postalCode: data.address.residential.zip,
           complement: data.address.residential.complement,

@@ -41,7 +41,10 @@ class PaymentController {
 
     const pagSeguro = new PagSeguro();
     const result = await pagSeguro.checkout(parsedData);
-    if (result.error) return res.status(500).json(result);
+    if (result.error || result.transaction?.status === 7)
+      return res
+        .status(400)
+        .json({ error: { message: 'Transação negada pela operadora' } });
 
     return res.json(result);
   }
