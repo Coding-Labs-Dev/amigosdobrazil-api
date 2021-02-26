@@ -62,7 +62,7 @@ export interface TripAttributes {
       | 'center bottom';
   };
   readonly bannerOpacity: number;
-  readonly bookFee: number;
+  readonly bookFee: string;
   readonly active: boolean;
   readonly deleted: boolean;
   readonly createdAt: Date;

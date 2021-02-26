@@ -117,7 +117,7 @@ export const parseCheckoutForm = (
             id: trip.slug,
             description: `Amigos do Brazil - ${trip.slug}`,
             quantity: 1,
-            amount: data.installments.installment.totalAmount.toFixed(2),
+            amount: Number(trip.bookFee).toFixed(2),
           },
         ],
       },
